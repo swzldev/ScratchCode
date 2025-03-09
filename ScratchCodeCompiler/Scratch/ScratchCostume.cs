@@ -6,21 +6,32 @@ using System.Threading.Tasks;
 
 namespace ScratchCodeCompiler.Scratch
 {
-    internal class ScratchCostume
+    internal class ScratchCostume : IScratchJsonable
     {
         public string name;
         public ImageDataFormat dataFormat;
-        public ScratchId AssetId { get; }
-        public string Md5ext { get; }
+        public ScratchAssetId AssetId { get; }
         public ScratchVector2 rotationCenter;
 
         public ScratchCostume(string name, ImageDataFormat dataFormat, ScratchVector2 rotationCenter)
         {
             this.name = name;
             this.dataFormat = dataFormat;
-            AssetId = new(32, false);
-            Md5ext = $"{AssetId.Id}.{dataFormat}";
+            AssetId = new();
             this.rotationCenter = rotationCenter;
+        }
+
+        public string ToJson()
+        {
+            string json = "{";
+            json += $"\"name\":\"{name}\",";
+            json += $"\"dataFormat\":\"{dataFormat.ToString().ToLower()}\",";
+            json += $"\"assetId\":\"{AssetId.Id}\",";
+            json += $"\"md5ext\":\"{AssetId.Md5}\",";
+            json += $"\"rotationCenterX\":{rotationCenter.x},";
+            json += $"\"rotationCenterY\":{rotationCenter.y}";
+            json += "}";
+            return json;
         }
     }
 }

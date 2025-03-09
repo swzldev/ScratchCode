@@ -40,12 +40,63 @@ namespace ScratchCodeCompiler.Scratch
             layerOrder = 0;
             tempo = 60;
             videoTransparency = 50;
-            videoState = ScratchVideoState.on;
+            videoState = ScratchVideoState.On;
         }
 
         public string ToJson()
         {
-            return "";
+            string json = "{";
+            json += $"\"isStage\":{isStage.ToString().ToLower()},";
+            json += $"\"name\":\"{name}\",";
+            json += "\"variables\":{";
+            for (int i = 0; i < variables.Count; i++)
+            {
+                json += variables[i].ToJson();
+                if (i < variables.Count - 1)
+                {
+                    json += ",";
+                }
+            }
+            json += "},\"lists\":{},"; // TODO: Implement ScratchList
+            json += "\"broadcasts\":{},"; // TODO: Implement ScratchBroadcast
+            json += "\"blocks\":{";
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                json += blocks[i].ToJson();
+                if (i < blocks.Count - 1)
+                {
+                    json += ",";
+                }
+            }
+            json += "},\"comments\":{},"; // TODO: Implement ScratchComment
+            json += $"\"currentCostume\":{currentCostume},";
+            json += "\"costumes\":[";
+            for (int i = 0; i < costumes.Count; i++)
+            {
+                json += costumes[i].ToJson();
+                if (i < costumes.Count - 1)
+                {
+                    json += ",";
+                }
+            }
+            json += "],\"sounds\":[";
+            for (int i = 0; i < sounds.Count; i++)
+            {
+                json += sounds[i].ToJson();
+                if (i < sounds.Count - 1)
+                {
+                    json += ",";
+                }
+            }
+            json += $"],\"volume\":{volume},";
+            json += $"\"layerOrder\":{layerOrder},";
+            json += $"\"tempo\":{tempo},";
+            json += $"\"videoTransparency\":{videoTransparency},";
+            json += $"\"videoState\":\"{videoState.ToString().ToLower()}\",";
+            json += "\"textToSpeechLanguage\":null"; // TODO: Implement ScratchTextToSpeechLanguage
+            json += "}";
+
+            return json;
         }
     }
 }

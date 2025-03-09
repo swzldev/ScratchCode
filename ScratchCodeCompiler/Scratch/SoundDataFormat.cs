@@ -8,6 +8,6 @@ namespace ScratchCodeCompiler.Scratch
 {
     internal enum SoundDataFormat
     {
-        wav
+        WAV
     }
 }

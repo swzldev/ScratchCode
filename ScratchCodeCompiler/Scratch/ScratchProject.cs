@@ -15,7 +15,10 @@ namespace ScratchCodeCompiler.Scratch
 
         public ScratchProject()
         {
-
+            Targets = new();
+            Monitors = new();
+            Extensions = new();
+            Meta = new("3.0.0", "0.2.0", "Scratch 3.0");
         }
 
         public string ToJson()

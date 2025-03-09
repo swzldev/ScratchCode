@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ScratchCodeCompiler.Scratch
 {
-    internal class ScratchVariable
+    internal class ScratchVariable : IScratchJsonable
     {
         public ScratchId Id { get; }
         public string Name { get; }
@@ -15,6 +15,15 @@ namespace ScratchCodeCompiler.Scratch
         {
             Id = new();
             Name = name;
+        }
+
+        public string ToJson()
+        {
+            string json = "{";
+            json += $"{Id.ToJson()}:[";
+            json += $"\"{Name}\",0"; // 0 is the default value
+            json += "]}";
+            return json;
         }
     }
 }

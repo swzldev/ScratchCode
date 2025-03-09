@@ -8,7 +8,7 @@ namespace ScratchCodeCompiler.Scratch
 {
     internal enum ScratchVideoState
     {
-        on,
-        off
+        On,
+        Off
     }
 }

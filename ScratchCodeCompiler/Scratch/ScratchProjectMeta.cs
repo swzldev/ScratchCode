@@ -8,15 +8,15 @@ namespace ScratchCodeCompiler.Scratch
 {
     internal class ScratchProjectMeta : IScratchJsonable
     {
-        public string Semver { get; set; }
-        public string Vm { get; set; }
-        public string Agent { get; set; }
+        public string Semver { get; }
+        public string Vm { get; }
+        public string Agent { get; }
 
-        public ScratchProjectMeta(string semver, string vm, string agent)
+        public ScratchProjectMeta()
         {
-            Semver = semver;
-            Vm = vm;
-            Agent = agent;
+            Semver = "3.0.0";
+            Vm = "11.0.0-beta.2";
+            Agent = "ScratchCode compiler";
         }
 
         public string ToJson()

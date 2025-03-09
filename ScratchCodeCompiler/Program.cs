@@ -10,8 +10,17 @@ namespace ScratchCodeCompiler
     {
         static void Main(string[] args)
         {
-            ScratchBlock block = new(ScratchOpcode.motion_goto, new ScratchVector2(0, 0));
-            Console.WriteLine(block.ToJson());
+            ScratchProject project = new();
+
+            ScratchTarget stage = new("Stage", true);
+            ScratchCostume costume = new("backdrop1", ImageDataFormat.SVG, new ScratchVector2(240, 180));
+            stage.costumes.Add(costume);
+
+            stage.blocks.Add(new(ScratchOpcode.Motion_MoveSteps, new ScratchVector2(0, 0)));
+
+            project.Targets.Add(stage);
+            
+            Console.WriteLine(project.ToJson());
             Console.ReadKey();
             return;
 

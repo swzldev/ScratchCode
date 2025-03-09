@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ScratchCodeCompiler.Scratch
 {
-    internal class ScratchSound
+    internal class ScratchSound : IScratchJsonable
     {
         public string name;
         public string assetId;
@@ -23,6 +23,20 @@ namespace ScratchCodeCompiler.Scratch
             this.rate = rate;
             this.sampleCount = sampleCount;
             md5ext = "";
+        }
+
+        public string ToJson()
+        {
+            string json = "{";
+            json += $"\"name\":\"{name}\",";
+            json += $"\"assetId\":\"{assetId}\",";
+            json += $"\"dataFormat\":\"{dataFormat.ToString().ToLower()}\",";
+            json += $"\"format\":\"{format}\",";
+            json += $"\"rate\":{rate},";
+            json += $"\"sampleCount\":{sampleCount},";
+            json += $"\"md5ext\":\"{md5ext}\"";
+            json += "}";
+            return json;
         }
     }
 }
