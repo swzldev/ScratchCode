@@ -2,7 +2,6 @@
 using ScratchCodeCompiler.Lexical;
 using ScratchCodeCompiler.Parsing;
 using ScratchCodeCompiler.Parsing.AST;
-using ScratchCodeCompiler.Scratch;
 
 namespace ScratchCodeCompiler
 {

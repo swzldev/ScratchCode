@@ -26,11 +26,29 @@ namespace ScratchCodeCompiler.Parsing
             return program;
         }
 
+        private CodeBlockNode ParseCodeBlock()
+        {
+            if (!Match(TokenType.GmOpenBrace))
+            {
+                throw new Exception("Expected '{'");
+            }
+            CodeBlockNode codeBlock = new();
+            while (!IsAtEnd() && !Match(TokenType.GmCloseBrace))
+            {
+                codeBlock.Children.Add(ParseExpression());
+            }
+            if (Previous().Type != TokenType.GmCloseBrace)
+            {
+                throw new Exception("Expected '}'");
+            }
+            return codeBlock;
+        }
+
         private ASTNode ParseExpression()
         {
             if (Match(TokenType.KwIf))
             {
-
+                return ParseIfStatement();
             }
             return ParseBinaryExpression();
         }
@@ -38,13 +56,31 @@ namespace ScratchCodeCompiler.Parsing
         private IfStatementNode ParseIfStatement()
         {
             ExpressionNode condition = ParseBinaryExpression();
+            if (!Match(TokenType.GmOpenBrace))
+            {
+                throw new Exception("Expected '('");
+            }
+            IfStatementNode ifStmt = new(condition, ParseCodeBlock());
+            if (Match(TokenType.KwElse))
+            {
+                ifStmt.ElseNode = ParseElseStatement(ifStmt);
+            }
+            return ifStmt;
+        }
 
+        private ElseStatementNode ParseElseStatement(IfStatementNode parent)
+        {
+            if (Match(TokenType.KwIf))
+            {
+                return new(parent, ParseIfStatement().Body);
+            }
+            return new(parent, ParseCodeBlock());
         }
 
         private ExpressionNode ParseBinaryExpression(int precedence = 0)
         {
             ExpressionNode left = ParsePrimaryExpression();
-            if (Match(TokenType.EOF) || Match(TokenType.LineTerminator))
+            if (Match(TokenType.EOF) || Match(TokenType.LineTerminator) || CheckGrammar())
             {
                 return left;
             }
@@ -65,7 +101,8 @@ namespace ScratchCodeCompiler.Parsing
             }
             if (Match(TokenType.Identifier))
             {
-                if (variables.ContainsKey(Previous().Value)) {
+                if (variables.ContainsKey(Previous().Value))
+                {
                     return variables[Previous().Value];
                 }
                 VariableNode variable = new(Previous().Value);
@@ -110,6 +147,11 @@ namespace ScratchCodeCompiler.Parsing
                 return true;
             }
             return false;
+        }
+
+        private bool CheckGrammar()
+        {
+            return Check(TokenType.GmOpenParen) || Check(TokenType.GmCloseParen) || Check(TokenType.GmOpenBracket) || Check(TokenType.GmCloseBracket) || Check(TokenType.GmOpenBrace) || Check(TokenType.GmCloseBrace);
         }
 
         private bool IsAtEnd()

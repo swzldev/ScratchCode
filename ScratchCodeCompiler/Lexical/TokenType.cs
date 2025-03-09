@@ -18,6 +18,14 @@
         OpMultiply,
         OpDivide,
 
+        // Grammars
+        GmOpenParen,
+        GmCloseParen,
+        GmOpenBrace,
+        GmCloseBrace,
+        GmCloseBracket,
+        GmOpenBracket,
+
         EOF
     }
 }
