@@ -17,21 +17,15 @@
             for (int i = 0; i < code.Length; i++)
             {
                 char c = code[i];
-                if (Operators.TryGetOperator(c, out TokenType opType))
+                if (Operators.TryGetOperator(code, ref i, out TokenType opType))
                 {
                     TryAddWord(ref word);
-                    tokens.Add(new Token(opType, c.ToString()));
+                    tokens.Add(new Token(opType, Operators.GetOperatorString(opType)));
                     continue;
                 }
                 if (Grammars.TryGetGrammar(c, out TokenType gmType)) {
                     TryAddWord(ref word);
                     tokens.Add(new Token(gmType, c.ToString()));
-                    continue;
-                }
-                if (c == '\n')
-                {
-                    TryAddWord(ref word);
-                    tokens.Add(new Token(TokenType.LineTerminator, "\\n"));
                     continue;
                 }
                 if (char.IsWhiteSpace(c))

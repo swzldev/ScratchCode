@@ -20,7 +20,7 @@ namespace ScratchCodeCompiler.Parsing.AST
             string str = "{\n";
             foreach (ASTNode child in Children)
             {
-                str += child.ToString();
+                str += child.ToString() + "\n";
             }
             str += "}";
             return str;

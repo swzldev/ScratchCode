@@ -12,6 +12,7 @@ namespace ScratchCodeCompiler
             string inputFilePath = string.Empty;
             if (args.Length == 0)
             {
+                inputFilePath = "C:\\Users\\maxmt\\source\\repos\\ScratchCode\\ScratchCodeCompiler\\Testing\\Test.sc";
                 while (!File.Exists(inputFilePath))
                 {
                     Console.Write("Input file path: ");

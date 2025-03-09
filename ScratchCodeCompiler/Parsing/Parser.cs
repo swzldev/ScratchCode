@@ -150,10 +150,5 @@ namespace ScratchCodeCompiler.Parsing
         {
             return Peek().Type == TokenType.EOF;
         }
-
-        private bool IsAtLineEnd()
-        {
-            return Peek().Type == TokenType.LineTerminator;
-        }
     }
 }

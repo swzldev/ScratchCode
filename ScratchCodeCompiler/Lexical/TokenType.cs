@@ -3,7 +3,6 @@
     enum TokenType
     {
         Identifier,
-        LineTerminator,
         Number,
 
         // Keywords
@@ -13,6 +12,8 @@
 
         // Operators
         OpAssign,
+        OpEqual,
+        OpNotEqual,
         OpAdd,
         OpSubtract,
         OpMultiply,
