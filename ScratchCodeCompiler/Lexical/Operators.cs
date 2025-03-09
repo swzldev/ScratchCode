@@ -11,7 +11,20 @@
                 TokenType.OpMultiply => 3,
                 TokenType.OpSubtract => 4,
                 TokenType.OpAdd => 5,
-                _ => throw new ArgumentException("Invalid operator type", nameof(type)),
+                _ => throw new ArgumentException($"Invalid operator type: {type}"),
+            };
+        }
+
+        public static bool IsOperator(TokenType op)
+        {
+            return op switch
+            {
+                TokenType.OpAssign => true,
+                TokenType.OpDivide => true,
+                TokenType.OpMultiply => true,
+                TokenType.OpSubtract => true,
+                TokenType.OpAdd => true,
+                _ => false,
             };
         }
 

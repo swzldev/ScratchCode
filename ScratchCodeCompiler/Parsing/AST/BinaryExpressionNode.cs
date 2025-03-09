@@ -17,7 +17,7 @@ namespace ScratchCodeCompiler.Parsing.AST
 
         public override string ToString()
         {
-            return $"(BinaryExpression [{Left.ToString()} {Operator} {Right.ToString()}])";
+            return $"(BinaryExpression {{{Left} {Operator} {Right}}})";
         }
     }
 }

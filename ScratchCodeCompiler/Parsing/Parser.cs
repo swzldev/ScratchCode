@@ -56,10 +56,6 @@ namespace ScratchCodeCompiler.Parsing
         private IfStatementNode ParseIfStatement()
         {
             ExpressionNode condition = ParseBinaryExpression();
-            if (!Match(TokenType.GmOpenBrace))
-            {
-                throw new Exception("Expected '('");
-            }
             IfStatementNode ifStmt = new(condition, ParseCodeBlock());
             if (Match(TokenType.KwElse))
             {
@@ -72,7 +68,7 @@ namespace ScratchCodeCompiler.Parsing
         {
             if (Match(TokenType.KwIf))
             {
-                return new(parent, ParseIfStatement().Body);
+                return new(parent, ParseIfStatement());
             }
             return new(parent, ParseCodeBlock());
         }
@@ -80,11 +76,7 @@ namespace ScratchCodeCompiler.Parsing
         private ExpressionNode ParseBinaryExpression(int precedence = 0)
         {
             ExpressionNode left = ParsePrimaryExpression();
-            if (Match(TokenType.EOF) || Match(TokenType.LineTerminator) || CheckGrammar())
-            {
-                return left;
-            }
-            while (!IsAtEnd() && Operators.GetPrecedence(Peek().Type) > precedence)
+            while (!IsAtEnd() && Operators.IsOperator(Peek().Type) && Operators.GetPrecedence(Peek().Type) > precedence)
             {
                 Token op = Consume();
                 ASTNode right = ParseBinaryExpression(Operators.GetPrecedence(op.Type));
@@ -109,7 +101,7 @@ namespace ScratchCodeCompiler.Parsing
                 variables.Add(variable.VariableName, variable);
                 return variable;
             }
-            throw new Exception("Expected expression");
+            throw new Exception("Expected identifier or literal");
         }
 
         private void Advance()

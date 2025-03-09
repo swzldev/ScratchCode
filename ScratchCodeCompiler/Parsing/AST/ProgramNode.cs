@@ -12,7 +12,7 @@
 
         public override string ToString()
         {
-            return $"Program [\n\t{string.Join("\n\t", Statements)}\n]";
+            return $"Program {{\n{string.Join("\n", Statements)}\n}}";
         }
     }
 }

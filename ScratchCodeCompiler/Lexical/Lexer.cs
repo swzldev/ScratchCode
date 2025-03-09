@@ -36,17 +36,7 @@
                 }
                 if (char.IsWhiteSpace(c))
                 {
-                    if (!string.IsNullOrEmpty(word))
-                    {
-                        if (long.TryParse(word, out _))
-                        {
-                            tokens.Add(new Token(TokenType.Number, word));
-                        }
-                        else
-                        {
-                            tokens.Add(new Token(TokenType.Identifier, word));
-                        }
-                    }
+                    TryAddWord(ref word);
                     word = string.Empty;
                     continue;
                 }

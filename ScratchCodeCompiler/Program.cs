@@ -9,21 +9,23 @@ namespace ScratchCodeCompiler
     {
         static void Main(string[] args)
         {
-            //ScratchProject project = new();
+            string inputFilePath = string.Empty;
+            if (args.Length == 0)
+            {
+                while (!File.Exists(inputFilePath))
+                {
+                    Console.Write("Input file path: ");
+                    inputFilePath = Console.ReadLine() ?? "";
+                }
+            }
+            else
+            {
+                inputFilePath = args[0];
+            }
 
-            //ScratchTarget stage = new("Stage", true);
-            //ScratchCostume costume = new("backdrop1", ImageDataFormat.SVG, new ScratchVector2(240, 180));
-            //stage.costumes.Add(costume);
+            string[] inputFileLines = File.ReadAllLines(inputFilePath);
+            string input = string.Join("\n", inputFileLines);
 
-            //stage.blocks.Add(new(ScratchOpcode.Motion_MoveSteps, new ScratchVector2(0, 0)));
-
-            //project.Targets.Add(stage);
-            
-            //Console.WriteLine(project.ToJson());
-            //Console.ReadKey();
-            //return;
-
-            string input = "c = 2 + 2\nc = 4";
             Lexer lexer = new(input);
             List<Token> tokens = lexer.Tokenize();
 

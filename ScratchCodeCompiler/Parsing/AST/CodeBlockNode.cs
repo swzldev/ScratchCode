@@ -14,5 +14,16 @@ namespace ScratchCodeCompiler.Parsing.AST
         {
             Children = [];
         }
+
+        public override string ToString()
+        {
+            string str = "{\n";
+            foreach (ASTNode child in Children)
+            {
+                str += child.ToString();
+            }
+            str += "}";
+            return str;
+        }
     }
 }

@@ -8,6 +8,11 @@ namespace ScratchCodeCompiler.Lexical
 {
     internal static class Keywords
     {
+        public static bool IsKeyword(string word)
+        {
+            return TryGetKeyword(word, out _);
+        }
+
         public static bool TryGetKeyword(string word, out TokenType keywordType)
         {
             keywordType = word switch

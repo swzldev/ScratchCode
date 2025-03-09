@@ -11,5 +11,15 @@
             Condition = condition;
             Body = body;
         }
+
+        public override string ToString()
+        {
+            string str = $"If ({Condition}) {Body}";
+            if (ElseNode != null)
+            {
+                str += ElseNode.ToString();
+            }
+            return str;
+        }
     }
 }
