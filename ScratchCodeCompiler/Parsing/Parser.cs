@@ -20,43 +20,45 @@ namespace ScratchCodeCompiler.Parsing
             ProgramNode program = new();
             while (!IsAtEnd())
             {
-                ASTNode? expr = ParseExpression();
-                if (expr != null)
-                {
-                    program.AddStatement(expr);
-                }
+                program.AddStatement(ParseExpression());
             }
             program.Variables = variables;
             return program;
         }
 
-        private ASTNode? ParseExpression()
+        private ASTNode ParseExpression()
         {
+            if (Match(TokenType.KwIf))
+            {
+
+            }
             return ParseBinaryExpression();
         }
 
-        private ASTNode? ParseBinaryExpression(int precedence = 0)
+        private IfStatementNode ParseIfStatement()
         {
-            ASTNode? left = ParsePrimaryExpression();
-            while (!IsAtEnd() && left == null)
+            ExpressionNode condition = ParseBinaryExpression();
+
+        }
+
+        private ExpressionNode ParseBinaryExpression(int precedence = 0)
+        {
+            ExpressionNode left = ParsePrimaryExpression();
+            if (Match(TokenType.EOF) || Match(TokenType.LineTerminator))
             {
-                left = ParsePrimaryExpression();
+                return left;
             }
-            while (!IsAtLineEnd() && !IsAtEnd() && Operators.GetPrecedence(Operators.TokenTypeToOperator(Peek().Type)) > precedence)
+            while (!IsAtEnd() && Operators.GetPrecedence(Peek().Type) > precedence)
             {
                 Token op = Consume();
-                ASTNode right = ParseBinaryExpression(Operators.GetPrecedence(Operators.TokenTypeToOperator(op.Type)));
-                left = new BinaryExpressionNode(left, right, Operators.TokenTypeToOperator(op.Type));
+                ASTNode right = ParseBinaryExpression(Operators.GetPrecedence(op.Type));
+                left = new BinaryExpressionNode(left, right, op.Type);
             }
             return left;
         }
 
-        private ASTNode? ParsePrimaryExpression()
+        private ExpressionNode ParsePrimaryExpression()
         {
-            if (Match(TokenType.LineTerminator))
-            {
-                return null;
-            }
             if (Match(TokenType.Number))
             {
                 return new NumberLiteralNode(long.Parse(Previous().Value));

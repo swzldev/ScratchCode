@@ -2,40 +2,30 @@
 {
     internal class Lexer
     {
-        public static List<Token> Tokenize(string code)
-        {
-            List<Token> tokens = new();
+        private string code;
+        private List<Token> tokens;
 
-            bool lastWasNewline = false;
+        public Lexer(string code)
+        {
+            this.code = code;
+            tokens = [];
+        }
+
+        public List<Token> Tokenize()
+        {
             string word = string.Empty;
             for (int i = 0; i < code.Length; i++)
             {
                 char c = code[i];
-                if (Operators.GetOperator(c, out OperatorType type))
+                if (Operators.TryGetOperator(c, out TokenType type))
                 {
-                    TokenType tokenType = Operators.OperatorToTokenType(type);
-                    if (!string.IsNullOrEmpty(word))
-                    {
-                        tokens.Add(new Token(TokenType.Identifier, word));
-                        word = string.Empty;
-                    }
-                    tokens.Add(new Token(tokenType, c.ToString()));
+                    TryAddWord(ref word);
+                    tokens.Add(new Token(type, c.ToString()));
                     continue;
                 }
                 if (c == '\n')
                 {
-                    if (!string.IsNullOrEmpty(word))
-                    {
-                        if (long.TryParse(word, out _))
-                        {
-                            tokens.Add(new Token(TokenType.Number, word));
-                        }
-                        else
-                        {
-                            tokens.Add(new Token(TokenType.Identifier, word));
-                        }
-                    }
-                    word = string.Empty;
+                    TryAddWord(ref word);
                     tokens.Add(new Token(TokenType.LineTerminator, "\\n"));
                     continue;
                 }
@@ -57,6 +47,14 @@
                 }
                 word += c;
             }
+            TryAddWord(ref word);
+            tokens.Add(new Token(TokenType.EOF, string.Empty));
+
+            return tokens;
+        }
+
+        private bool TryAddWord(ref string word)
+        {
             if (!string.IsNullOrEmpty(word))
             {
                 if (long.TryParse(word, out _))
@@ -65,12 +63,16 @@
                 }
                 else
                 {
-                    tokens.Add(new Token(TokenType.Identifier, word));
+                    if (Keywords.TryGetKeyword(word, out TokenType type))
+                    {
+                        tokens.Add(new Token(type, word));
+                    }
+                    else tokens.Add(new Token(TokenType.Identifier, word));
                 }
+                word = string.Empty;
+                return true;
             }
-            tokens.Add(new Token(TokenType.EOF, string.Empty));
-
-            return tokens;
+            return false;
         }
     }
 }

@@ -10,22 +10,23 @@ namespace ScratchCodeCompiler
     {
         static void Main(string[] args)
         {
-            ScratchProject project = new();
+            //ScratchProject project = new();
 
-            ScratchTarget stage = new("Stage", true);
-            ScratchCostume costume = new("backdrop1", ImageDataFormat.SVG, new ScratchVector2(240, 180));
-            stage.costumes.Add(costume);
+            //ScratchTarget stage = new("Stage", true);
+            //ScratchCostume costume = new("backdrop1", ImageDataFormat.SVG, new ScratchVector2(240, 180));
+            //stage.costumes.Add(costume);
 
-            stage.blocks.Add(new(ScratchOpcode.Motion_MoveSteps, new ScratchVector2(0, 0)));
+            //stage.blocks.Add(new(ScratchOpcode.Motion_MoveSteps, new ScratchVector2(0, 0)));
 
-            project.Targets.Add(stage);
+            //project.Targets.Add(stage);
             
-            Console.WriteLine(project.ToJson());
-            Console.ReadKey();
-            return;
+            //Console.WriteLine(project.ToJson());
+            //Console.ReadKey();
+            //return;
 
             string input = "c = 2 + 2\nc = 4";
-            List<Token> tokens = Lexer.Tokenize(input);
+            Lexer lexer = new(input);
+            List<Token> tokens = lexer.Tokenize();
 
             foreach (Token token in tokens)
             {

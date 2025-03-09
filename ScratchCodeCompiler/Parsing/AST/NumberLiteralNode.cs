@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ScratchCodeCompiler.Parsing.AST
 {
-    internal class NumberLiteralNode : ASTNode
+    internal class NumberLiteralNode : ExpressionNode
     {
         long Value { get; }
 

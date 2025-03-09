@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ScratchCodeCompiler.Parsing.AST
 {
-    internal class VariableNode : ASTNode
+    internal class VariableNode : ExpressionNode
     {
         private static List<string> variables = [];
 

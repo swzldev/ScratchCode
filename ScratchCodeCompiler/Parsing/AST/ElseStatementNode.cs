@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace ScratchCodeCompiler.Parsing.AST
 {
-    internal class RepeatStatementNode : StatementNode
+    internal class ElseStatementNode
     {
-        public int RepeatCount { get; }
+        public IfStatementNode ParentIf { get; }
         public CodeBlockNode Body { get; set; }
 
-        public RepeatStatementNode(int repeatCount, CodeBlockNode body)
+        public ElseStatementNode(IfStatementNode parentIf, CodeBlockNode body)
         {
-            RepeatCount = repeatCount;
+            ParentIf = parentIf;
             Body = body;
         }
     }

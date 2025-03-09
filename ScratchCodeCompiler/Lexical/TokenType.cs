@@ -6,6 +6,12 @@
         LineTerminator,
         Number,
 
+        // Keywords
+        KwIf,
+        KwElse,
+        KwRepeat,
+
+        // Operators
         OpAssign,
         OpAdd,
         OpSubtract,

@@ -6,9 +6,9 @@ namespace ScratchCodeCompiler.Parsing.AST
     {
         public ASTNode Left { get; }
         public ASTNode Right { get; }
-        public OperatorType Operator { get; }
+        public TokenType Operator { get; }
 
-        public BinaryExpressionNode(ASTNode left, ASTNode right, OperatorType op)
+        public BinaryExpressionNode(ASTNode left, ASTNode right, TokenType op)
         {
             Left = left;
             Right = right;
