@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ScratchCodeCompiler.Parsing.AST
 {
-    internal class FunctionDeclerationNode
+    internal class ExpressionNode : ASTNode
     {
 
     }

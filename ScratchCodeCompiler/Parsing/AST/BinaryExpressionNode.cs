@@ -2,7 +2,7 @@
 
 namespace ScratchCodeCompiler.Parsing.AST
 {
-    internal class BinaryExpressionNode : ASTNode
+    internal class BinaryExpressionNode : ExpressionNode
     {
         public ASTNode Left { get; }
         public ASTNode Right { get; }

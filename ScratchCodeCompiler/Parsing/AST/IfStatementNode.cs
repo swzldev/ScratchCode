@@ -1,0 +1,14 @@
+﻿namespace ScratchCodeCompiler.Parsing.AST
+{
+    internal class IfStatementNode
+    {
+        public ExpressionNode Condition { get; set; }
+        public CodeBlockNode Body { get; set; }
+
+        public IfStatementNode(ExpressionNode condition, CodeBlockNode body)
+        {
+            Condition = condition;
+            Body = body;
+        }
+    }
+}
