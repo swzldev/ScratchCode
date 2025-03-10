@@ -11,14 +11,31 @@ namespace ScratchCodeCompiler.Parsing.AST
     {
         public List<ASTNode> Children { get; set; }
 
+        public bool IsEmpty => Children.Count == 0;
+
         public CodeBlockNode()
         {
             Children = [];
         }
 
-        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock, out ScratchVariable? returnVar)
+        public ScratchBlock[] ToScratchBlocks()
         {
-            throw new NotImplementedException();
+            List<ScratchBlock> blocks = [];
+            ScratchBlock? lastBlock = null;
+            foreach (ASTNode child in Children)
+            {
+                if (child is IScratchBlockTranslatable translatable)
+                {
+                    ScratchBlock scratchBlock = translatable.ToScratchBlock(ref blocks);
+                    lastBlock?.Stitch(scratchBlock);
+                    lastBlock = scratchBlock;
+                }
+                else
+                {
+                    throw new NotImplementedException("Found non translatable node");
+                }
+            }
+            return [.. blocks];
         }
 
         public override string ToString()

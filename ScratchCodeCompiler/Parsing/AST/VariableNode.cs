@@ -20,13 +20,6 @@ namespace ScratchCodeCompiler.Parsing.AST
             ScratchVariable = value;
         }
 
-        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock, out ScratchVariable? returnVar)
-        {
-            returnBlock = null;
-            returnVar = null;
-            return [];
-        }
-
         public override string ToString()
         {
             return $"Variable({VariableName})";

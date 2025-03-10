@@ -38,7 +38,7 @@ namespace ScratchCodeCompiler.CodeGeneration
             project.Targets.Add(stage);
 
             // Add blocks
-            stage.blocks.AddRange(Program.ToScratchBlocks(out _, out _));
+            stage.blocks.AddRange(Program.ToScratchBlocks());
 
             // Add variables
             stage.variables.AddRange(VariableNode.GlobalVariables.Values);

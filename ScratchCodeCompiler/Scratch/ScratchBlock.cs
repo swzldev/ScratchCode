@@ -18,6 +18,13 @@ namespace ScratchCodeCompiler.Scratch
 
         public bool IsTopLevel => Parent == null;
 
+        public ScratchBlock(ScratchOpcode opcode)
+        {
+            Opcode = opcode;
+            Position = new(0, 0);
+            Id = new ScratchId();
+        }
+
         public ScratchBlock(ScratchOpcode opcode, ScratchVector2 position)
         {
             Opcode = opcode;
@@ -25,13 +32,18 @@ namespace ScratchCodeCompiler.Scratch
             Id = new ScratchId();
         }
 
-        public ScratchBlock(ScratchOpcode opcode, ScratchVector2 position, ScratchBlock parent)
+        public ScratchBlock(ScratchOpcode opcode, ScratchBlock parent)
         {
             Opcode = opcode;
-            Position = position;
+            Position = new(0, 0);
             Id = new ScratchId();
             Parent = parent;
-            Parent.Next = this;
+        }
+
+        public void Stitch(ScratchBlock block)
+        {
+            Next = block;
+            block.Parent = this;
         }
 
         public string ToJson()

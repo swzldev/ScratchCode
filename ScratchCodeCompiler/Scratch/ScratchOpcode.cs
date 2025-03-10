@@ -30,6 +30,23 @@ namespace ScratchCodeCompiler.Scratch
         Motion_IfOnEdgeBounce,
         Motion_SetRotationStyle,
 
+        // Looks
+
+        // Sound
+
+        // Events
+
+        // Control
+        Control_Wait,
+        Control_Repeat,
+        Control_Forever,
+        Control_If,
+        Control_IfElse,
+        Control_WaitUntil,
+        Control_RepeatUntil,
+
+        // Sensing
+
         // Operators
         Operator_Add,
         Operator_Subtract,
@@ -41,7 +58,7 @@ namespace ScratchCodeCompiler.Scratch
 
         Operator_Not,
 
-        // Data
+        // Variables
         Data_SetVariableTo,
         Data_ChangeVariableBy,
         Data_ShowVariable,

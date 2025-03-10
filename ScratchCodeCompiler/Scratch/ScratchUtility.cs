@@ -9,19 +9,12 @@ namespace ScratchCodeCompiler.Scratch
 {
     internal static class ScratchUtility
     {
-        private static List<ScratchBlock> ReturnStack = [];
+        private static ScratchVector2 lastPosition = new(0, 0);
 
-        public static bool TryGetArithmaticOperatorOpcode(TokenType op, out ScratchOpcode opcode)
+        public static ScratchVector2 GetNextGoodPosition()
         {
-            opcode = op switch
-            {
-                TokenType.OpAdd => ScratchOpcode.Operator_Add,
-                TokenType.OpSubtract => ScratchOpcode.Operator_Subtract,
-                TokenType.OpMultiply => ScratchOpcode.Operator_Multiply,
-                TokenType.OpDivide => ScratchOpcode.Operator_Divide,
-                _ => ScratchOpcode.None
-            };
-            return opcode != ScratchOpcode.None;
+            lastPosition.x += 800;
+            return lastPosition;
         }
     }
 }

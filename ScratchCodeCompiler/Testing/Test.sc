@@ -1,2 +1,5 @@
-myVar = 4 + 4 - 4 * 4 / 4 - 67 - 434534 + 3424
-myVar = 2
+myVar = 0
+forever {
+	myVar = myVar + 1
+	myVar = 4
+}

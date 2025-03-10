@@ -11,24 +11,24 @@ namespace ScratchCodeCompiler.Parsing.AST
             Code.Add(expr);
         }
 
-        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock, out ScratchVariable? returnVar)
+        public ScratchBlock[] ToScratchBlocks()
         {
-            returnBlock = null;
-            returnVar = null;
             List<ScratchBlock> blocks = [];
-            foreach (var node in Code)
+            ScratchBlock? lastBlock = null;
+            foreach (ASTNode child in Code)
             {
-                ScratchBlock[] nodeBlocks = node.ToScratchBlocks(out _, out _);
-                if (blocks.Count > 0)
+                if (child is IScratchBlockTranslatable translatable)
                 {
-                    ScratchBlock[] topLevelBlocks = blocks.Where(x => x.IsTopLevel).ToArray();
-                    ScratchBlock[] topLevelNodeBlocks = nodeBlocks.Where(x => x.IsTopLevel).ToArray();
-                    topLevelBlocks.Last().Next = topLevelNodeBlocks.First();
-                    topLevelNodeBlocks.First().Parent = topLevelBlocks.Last();
+                    ScratchBlock scratchBlock = translatable.ToScratchBlock(ref blocks);
+                    lastBlock?.Stitch(scratchBlock);
+                    lastBlock = scratchBlock;
                 }
-                blocks.AddRange(nodeBlocks);
+                else
+                {
+                    throw new NotImplementedException("Found non translatable node");
+                }
             }
-            return blocks.ToArray();
+            return [.. blocks];
         }
 
         public override string ToString()

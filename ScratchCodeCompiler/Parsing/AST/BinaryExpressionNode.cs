@@ -4,7 +4,7 @@ using ScratchCodeCompiler.Scratch;
 
 namespace ScratchCodeCompiler.Parsing.AST
 {
-    internal class BinaryExpressionNode : ExpressionNode
+    internal class BinaryExpressionNode : ExpressionNode, IScratchBlockTranslatable
     {
         public ExpressionNode Left { get; }
         public ExpressionNode Right { get; }
@@ -21,11 +21,8 @@ namespace ScratchCodeCompiler.Parsing.AST
             Operator = op;
         }
 
-        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock, out ScratchVariable? returnVar)
+        public ScratchBlock ToScratchBlock(ref List<ScratchBlock> blocks)
         {
-            List<ScratchBlock> blocks = [];
-            returnBlock = null;
-            returnVar = null;
             if (Operator == TokenType.OpAssign)
             {
                 ScratchBlock setVarBlock = new(ScratchOpcode.Data_SetVariableTo, new ScratchVector2(0, 0));
@@ -45,18 +42,17 @@ namespace ScratchCodeCompiler.Parsing.AST
                 else
                 {
                     // Set the variable to the result of an expression
-                    ScratchBlock[] valueBlocks = Right.ToScratchBlocks(out var exprResult, out _);
+                    ScratchBlock exprResult = (Right as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
                     setVarBlock.Inputs.Add(new("VALUE", exprResult ?? throw new NullReferenceException(), ScratchInputFormat.Number));
                     exprResult.Parent = setVarBlock;
-                    blocks.AddRange(valueBlocks);
+                    blocks.Add(exprResult);
                 }
-                returnVar = assignmentVar;
+                return setVarBlock;
             }
             else if (Operator == TokenType.OpEqual || Operator == TokenType.OpNotEqual)
             {
                 ScratchBlock ret;
                 ScratchBlock comparisonBlock = new(ScratchOpcode.Operator_Equals, new ScratchVector2(0, 0));
-                blocks.Add(comparisonBlock);
                 if (Operator == TokenType.OpEqual)
                 {
                     ret = comparisonBlock;
@@ -69,7 +65,6 @@ namespace ScratchCodeCompiler.Parsing.AST
                     ret.Inputs.Add(new("OPERAND", comparisonBlock));
                     comparisonBlock.Parent = ret;
                 }
-                returnBlock = ret;
 
                 if (Left is VariableNode lVariable)
                 {
@@ -84,10 +79,10 @@ namespace ScratchCodeCompiler.Parsing.AST
                 else
                 {
                     // Compare expression
-                    ScratchBlock[] leftBlocks = Left.ToScratchBlocks(out var lExprResult, out _);
+                    ScratchBlock lExprResult = (Left as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
                     lExprResult!.Parent = comparisonBlock;
                     comparisonBlock.Inputs.Add(new("OPERAND1", lExprResult ?? throw new NullReferenceException(), ScratchInputFormat.Number));
-                    blocks.AddRange(leftBlocks);
+                    blocks.Add(lExprResult);
                 }
 
                 if (Right is VariableNode rVariable)
@@ -103,11 +98,12 @@ namespace ScratchCodeCompiler.Parsing.AST
                 else
                 {
                     // Compare expression
-                    ScratchBlock[] rightBlocks = Right.ToScratchBlocks(out var rExprResult, out _);
+                    ScratchBlock rExprResult = (Right as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
                     rExprResult!.Parent = comparisonBlock;
                     comparisonBlock.Inputs.Add(new("OPERAND2", rExprResult ?? throw new NullReferenceException(), ScratchInputFormat.Number));
-                    blocks.AddRange(rightBlocks);
+                    blocks.Add(rExprResult);
                 }
+                return ret;
             }
             else
             {
@@ -120,8 +116,6 @@ namespace ScratchCodeCompiler.Parsing.AST
                     _ => throw new Exception($"Invalid operator {Operator}")
                 };
                 ScratchBlock operationBlock = new(opcode, new ScratchVector2(0, 0));
-                blocks.Add(operationBlock);
-                returnBlock = operationBlock;
 
                 if (Left is VariableNode lVariable)
                 {
@@ -136,10 +130,10 @@ namespace ScratchCodeCompiler.Parsing.AST
                 else
                 {
                     // Compare expression
-                    ScratchBlock[] leftBlocks = Left.ToScratchBlocks(out var lExprResult, out _);
+                    ScratchBlock lExprResult = (Left as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
                     lExprResult!.Parent = operationBlock;
                     operationBlock.Inputs.Add(new("NUM1", lExprResult ?? throw new NullReferenceException(), ScratchInputFormat.Number));
-                    blocks.AddRange(leftBlocks);
+                    blocks.Add(lExprResult);
                 }
 
                 if (Right is VariableNode rVariable)
@@ -155,13 +149,13 @@ namespace ScratchCodeCompiler.Parsing.AST
                 else
                 {
                     // Compare expression
-                    ScratchBlock[] rightBlocks = Right.ToScratchBlocks(out var rExprResult, out _);
+                    ScratchBlock rExprResult = (Right as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
                     rExprResult!.Parent = operationBlock;
                     operationBlock.Inputs.Add(new("NUM2", rExprResult ?? throw new NullReferenceException(), ScratchInputFormat.Number));
-                    blocks.AddRange(rightBlocks);
+                    blocks.Add(rExprResult);
                 }
+                return operationBlock;
             }
-            return blocks.ToArray();
         }
 
         public override string ToString()
