@@ -10,36 +10,6 @@ namespace ScratchCodeCompiler
     {
         static void Main(string[] args)
         {
-            VariableNode result = new("result");
-            result.ScratchVariable.Id.Id = "98x7VmWgo0LxQ4lj5pzy";
-            BinaryExpressionNode expr = new(result, new BinaryExpressionNode(new BinaryExpressionNode(new NumberLiteralNode(2), new NumberLiteralNode(2), TokenType.OpAdd), new NumberLiteralNode(4), TokenType.OpNotEqual), TokenType.OpAssign);
-            ScratchBlock[] blocks = expr.ToScratchBlocks(out _, out _);
-            Console.WriteLine(string.Join(',', blocks.Select(b => b.ToJson())));
-
-            return;
-            ScratchProject project = new();
-            ScratchTarget stage = new("Stage", true);
-
-            ScratchCostume stageCostume = new("backdrop1", ImageDataFormat.SVG, new(240, 180));
-            stage.costumes.Add(stageCostume);
-
-            ScratchVariable myVar = new("myVar");
-            stage.variables.Add(myVar);
-
-            ScratchBlock scratchBlock = new(ScratchOpcode.Data_SetVariableTo, new(0, 0));
-            scratchBlock.Inputs.Add(new("VALUE", ScratchInputFormat.Number, "123"));
-            scratchBlock.Fields.Add(new("VARIABLE", myVar));
-            stage.blocks.Add(scratchBlock);
-
-            ScratchBlock moveStepsBlock = new(ScratchOpcode.Motion_MoveSteps, new(0, 0), scratchBlock);
-            moveStepsBlock.Inputs.Add(new("STEPS", ScratchInputFormat.Number, "10"));
-            stage.blocks.Add(moveStepsBlock);
-
-            project.Targets.Add(stage);
-
-            Console.WriteLine(project.ToJson());
-
-            return;
             string inputFilePath = string.Empty;
             if (args.Length == 0)
             {
@@ -71,7 +41,7 @@ namespace ScratchCodeCompiler
 
             Console.WriteLine(program.ToString());
 
-            CodeGenerator generator = new(program, "D:\\ting.json");
+            CodeGenerator generator = new(program, "D:\\ScratchCompilerOutput");
             generator.Generate();
 
             Console.ReadKey();

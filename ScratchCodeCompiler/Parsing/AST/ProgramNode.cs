@@ -18,7 +18,15 @@ namespace ScratchCodeCompiler.Parsing.AST
             List<ScratchBlock> blocks = [];
             foreach (var node in Code)
             {
-                blocks.AddRange(node.ToScratchBlocks(out _, out _));
+                ScratchBlock[] nodeBlocks = node.ToScratchBlocks(out _, out _);
+                if (blocks.Count > 0)
+                {
+                    ScratchBlock[] topLevelBlocks = blocks.Where(x => x.IsTopLevel).ToArray();
+                    ScratchBlock[] topLevelNodeBlocks = nodeBlocks.Where(x => x.IsTopLevel).ToArray();
+                    topLevelBlocks.Last().Next = topLevelNodeBlocks.First();
+                    topLevelNodeBlocks.First().Parent = topLevelBlocks.Last();
+                }
+                blocks.AddRange(nodeBlocks);
             }
             return blocks.ToArray();
         }

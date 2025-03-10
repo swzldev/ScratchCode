@@ -4,7 +4,7 @@ namespace ScratchCodeCompiler.Parsing.AST
 {
     internal class VariableNode : ExpressionNode
     {
-        private static Dictionary<string, ScratchVariable> variables = [];
+        public static Dictionary<string, ScratchVariable> GlobalVariables { get; set; } = [];
 
         public string VariableName { get; }
         public ScratchVariable ScratchVariable { get; set; }
@@ -12,10 +12,10 @@ namespace ScratchCodeCompiler.Parsing.AST
         public VariableNode(string variableName)
         {
             VariableName = variableName;
-            if (!variables.TryGetValue(variableName, out ScratchVariable? value))
+            if (!GlobalVariables.TryGetValue(variableName, out ScratchVariable? value))
             {
                 value = new ScratchVariable(variableName);
-                variables[variableName] = value;
+                GlobalVariables[variableName] = value;
             }
             ScratchVariable = value;
         }

@@ -136,7 +136,7 @@ namespace ScratchCodeCompiler.Parsing.AST
                 else
                 {
                     // Compare expression
-                    ScratchBlock[] leftBlocks = Right.ToScratchBlocks(out var lExprResult, out _);
+                    ScratchBlock[] leftBlocks = Left.ToScratchBlocks(out var lExprResult, out _);
                     lExprResult!.Parent = operationBlock;
                     operationBlock.Inputs.Add(new("NUM1", lExprResult ?? throw new NullReferenceException(), ScratchInputFormat.Number));
                     blocks.AddRange(leftBlocks);

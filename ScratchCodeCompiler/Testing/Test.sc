@@ -1,5 +1,2 @@
-myVar = 4
-if myVar == 4 {
-	myVar = 45 + 4
-	myFunc(3, 5, 7)
-}
+myVar = 4 + 4 - 4 * 4 / 4 - 67 - 434534 + 3424
+myVar = 2

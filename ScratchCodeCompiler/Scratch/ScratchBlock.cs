@@ -48,8 +48,11 @@ namespace ScratchCodeCompiler.Scratch
             json += string.Join(",", Fields.Select(f => f.ToJson()));
             json += "},";
             json += "\"shadow\":false,";
-            json += $"\"topLevel\":{IsTopLevel.ToString().ToLower()},";
-            json += Position.ToJson();
+            json += $"\"topLevel\":{IsTopLevel.ToString().ToLower()}";
+            if (IsTopLevel)
+            {
+                json += $",{Position.ToJson()}";
+            }
             json += "}";
             return json;
         }
