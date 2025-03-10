@@ -10,6 +10,13 @@ namespace ScratchCodeCompiler
     {
         static void Main(string[] args)
         {
+            FunctionDeclerationNode funcdecl = new("sayhello", ["param1", "param2"], new());
+            List<ScratchBlock> blocks = [];
+            ScratchBlock block = funcdecl.ToScratchBlock(ref blocks);
+            blocks.Add(block);
+            Console.WriteLine(string.Join(',', blocks.Select(x => x.ToJson())));
+
+            return;
             string inputFilePath = string.Empty;
             if (args.Length == 0)
             {

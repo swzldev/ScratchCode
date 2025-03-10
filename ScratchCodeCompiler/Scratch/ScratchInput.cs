@@ -33,9 +33,9 @@ namespace ScratchCodeCompiler.Scratch
             LiteralValue = literalValue;
         }
 
-        public ScratchInput(string name, ScratchBlock block)
+        public ScratchInput(string name, ScratchBlock block, ScratchInputType overrideType = ScratchInputType.Block)
         {
-            Type = ScratchInputType.Block;
+            Type = overrideType;
             Name = name;
             Block = block;
             LiteralValue = "";
@@ -75,6 +75,11 @@ namespace ScratchCodeCompiler.Scratch
             else if (Type == ScratchInputType.Block)
             {
                 return $"\"{Name}\":[{(int)Type},{Block?.Id.ToJson()}]";
+            }
+            // "custom_block":[1,"Z8RoQ`N=?7Pc?Va0[|xy"]
+            else if (Type == ScratchInputType.CustomBlock)
+            {
+                return $"\"{Name}\":[1,{Block?.Id.ToJson()}]";
             }
             // "SUBSTACK":[1,null]
             if (NullLiteral)

@@ -18,9 +18,16 @@ namespace ScratchCodeCompiler.Scratch
             ProcCode = procCode;
         }
 
+        public void AddArgument(ScratchId id, string name, string defaultValue)
+        {
+            ArgumentIds.Add(id);
+            ArgumentNames.Add(name);
+            ArgumentDefaults.Add(defaultValue);
+        }
+
         public string ToJson()
         {
-            string json = $"\"tagname\":\"mutation\",\"children\":[],\"proccode\":{ProcCode},\"argumentids\":\"[";
+            string json = $"\"tagName\":\"mutation\",\"children\":[],\"proccode\":\"{ProcCode}\",\"argumentids\":\"[";
             for (int i = 0; i < ArgumentIds.Count; i++)
             {
                 json += $"\\\"{ArgumentIds[i].Id}\\\"";

@@ -4,6 +4,9 @@
     {
         Value = 1,
         Block = 2,
-        Expression = 3
+        Expression = 3,
+
+        // Custom input types
+        CustomBlock,
     }
 }

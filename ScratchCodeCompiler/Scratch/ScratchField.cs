@@ -9,24 +9,35 @@ namespace ScratchCodeCompiler.Scratch
     internal class ScratchField
     {
         public string Name { get; set; }
-        public ScratchFieldType Type { get; }
+        public string Label { get; set; }
         public ScratchVariable? Variable { get; }
+
+        public ScratchField(string name, string label)
+        {
+            Name = name;
+            Label = label;
+            Variable = null;
+        }
 
         public ScratchField(string name, ScratchVariable variable)
         {
             Name = name;
-            Type = ScratchFieldType.Variable;
+            Label = variable.Name;
             Variable = variable;
         }
 
         public string ToJson()
         {
-            // "VARIABLE":["hi","w2;5DP*ri[?LbZTB}d;5"]
-            if (Type == ScratchFieldType.Variable)
+            // "VARIABLE":["myVar","w2;5DP*ri[?LbZTB}d;5"]
+            if (Variable != null)
             {
-                return $"\"{Name}\":[\"{Variable?.Name}\",{Variable?.Id.ToJson()}]";
+                return $"\"{Name}\":[\"{Label}\",{Variable?.Id.ToJson()}]";
             }
-            return "";
+            // "VALUE":["this is a num input",null]
+            else
+            {
+                return $"\"{Name}\":[\"{Label}\",null]";
+            }
         }
     }
 }

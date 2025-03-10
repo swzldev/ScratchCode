@@ -68,6 +68,10 @@ namespace ScratchCodeCompiler.Scratch
         // Procedures/My Blocks
         Procedures_Definition,
         Procedures_Prototype,
-        Procedures_Call
+        Procedures_Call,
+
+        // Other/Special
+        Argument_Reporter_String_Number,
+        Argument_Reporter_Boolean,
     }
 }
