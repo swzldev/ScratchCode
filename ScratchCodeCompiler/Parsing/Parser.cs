@@ -43,6 +43,10 @@ namespace ScratchCodeCompiler.Parsing
 
         private ASTNode ParseExpression()
         {
+            if (Match(TokenType.KwFunc))
+            {
+                return ParseFunctionDeclaration();
+            }
             if (Match(TokenType.KwIf))
             {
                 return ParseIfStatement();
@@ -68,6 +72,38 @@ namespace ScratchCodeCompiler.Parsing
 
             }
             return ParseBinaryExpression();
+        }
+
+        private FunctionDeclerationNode ParseFunctionDeclaration()
+        {
+            if (!Match(TokenType.Identifier))
+            {
+                throw new Exception("Expected identifier");
+            }
+            string identifier = Previous().Value;
+            if (!Match(TokenType.GmOpenParen))
+            {
+                throw new Exception("Expected '('");
+            }
+            List<string> parameters = [];
+            while (!IsAtEnd() && !Match(TokenType.GmCloseParen))
+            {
+                if (!Match(TokenType.Identifier))
+                {
+                    throw new Exception("Expected identifier");
+                }
+                parameters.Add(Previous().Value);
+                if (!Match(TokenType.GmComma))
+                {
+                    Advance();
+                    break;
+                }
+            }
+            if (Previous().Type != TokenType.GmCloseParen)
+            {
+                throw new Exception("Expected ')'");
+            }
+            return new(identifier, parameters, ParseCodeBlock());
         }
 
         private IfStatementNode ParseIfStatement()

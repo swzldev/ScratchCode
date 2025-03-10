@@ -64,5 +64,10 @@ namespace ScratchCodeCompiler.Scratch
         Data_ChangeVariableBy,
         Data_ShowVariable,
         Data_HideVariable,
+
+        // Procedures/My Blocks
+        Procedures_Definition,
+        Procedures_Prototype,
+        Procedures_Call
     }
 }

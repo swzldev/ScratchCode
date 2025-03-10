@@ -17,6 +17,7 @@ namespace ScratchCodeCompiler.Lexical
         {
             keywordType = word switch
             {
+                "func" => TokenType.KwFunc,
                 "if" => TokenType.KwIf,
                 "else" => TokenType.KwElse,
                 "forever" => TokenType.KwForever,

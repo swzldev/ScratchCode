@@ -14,6 +14,7 @@ namespace ScratchCodeCompiler.Scratch
         public ScratchBlock? Parent { get; set; }
         public List<ScratchInput> Inputs { get; set; } = [];
         public List<ScratchField> Fields { get; set; } = [];
+        public ScratchMutation? Mutation { get; set; }
         public ScratchVector2 Position { get; set; }
 
         public bool IsTopLevel => Parent == null;
@@ -61,6 +62,10 @@ namespace ScratchCodeCompiler.Scratch
             json += "},";
             json += "\"shadow\":false,";
             json += $"\"topLevel\":{IsTopLevel.ToString().ToLower()}";
+            if (Mutation != null)
+            {
+                json += $",\"mutation\":{{{Mutation.ToJson()}}}";
+            }
             if (IsTopLevel)
             {
                 json += $",{Position.ToJson()}";

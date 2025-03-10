@@ -21,6 +21,7 @@ namespace ScratchCodeCompiler.Parsing.AST
                 ScratchBlock ifElseBlock = new(ScratchOpcode.Control_If_Else, new ScratchVector2(0, 0));
                 blocks.Add(ifElseBlock);
 
+                // Fix these functions at some point
                 ScratchBlock[] ifBodyBlocks = Body.ToScratchBlocks();
                 ifElseBlock.Inputs.Add(new("SUBSTACK", ifBodyBlocks.First()));
                 ifBodyBlocks.First().Parent = ifElseBlock;

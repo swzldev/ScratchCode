@@ -6,6 +6,7 @@
         Number,
 
         // Keywords
+        KwFunc,
         KwIf,
         KwElse,
         KwForever,
