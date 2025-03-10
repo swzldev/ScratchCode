@@ -8,6 +8,8 @@ namespace ScratchCodeCompiler.Scratch
 {
     internal enum ScratchType
     {
-
+        Boolean,
+        Number,
+        String,
     }
 }

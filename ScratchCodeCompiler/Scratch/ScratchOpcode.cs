@@ -35,15 +35,16 @@ namespace ScratchCodeCompiler.Scratch
         // Sound
 
         // Events
+        Event_WhenFlagClicked,
 
         // Control
         Control_Wait,
         Control_Repeat,
         Control_Forever,
         Control_If,
-        Control_IfElse,
-        Control_WaitUntil,
-        Control_RepeatUntil,
+        Control_If_Else,
+        Control_Wait_Until,
+        Control_Repeat_Until,
 
         // Sensing
 

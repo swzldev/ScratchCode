@@ -1,4 +1,6 @@
-﻿namespace ScratchCodeCompiler.Lexical
+﻿using ScratchCodeCompiler.Scratch;
+
+namespace ScratchCodeCompiler.Lexical
 {
     internal static class Operators
     {
@@ -25,17 +27,31 @@
             return "";
         }
 
+        public static ScratchType GetOperatorReturnType(TokenType op)
+        {
+            return op switch
+            {
+                TokenType.OpAdd => ScratchType.Number,
+                TokenType.OpSubtract => ScratchType.Number,
+                TokenType.OpMultiply => ScratchType.Number,
+                TokenType.OpDivide => ScratchType.Number,
+                TokenType.OpEqual => ScratchType.Boolean,
+                TokenType.OpNotEqual => ScratchType.Boolean,
+                _ => throw new ArgumentException($"Invalid operator type: {op}"),
+            };
+        }
+
         public static int GetPrecedence(TokenType type)
         {
             return type switch
             {
-                TokenType.OpAssign => 1,
-                TokenType.OpDivide => 2,
-                TokenType.OpMultiply => 3,
+                TokenType.OpNotEqual => 1,
+                TokenType.OpEqual => 2,
+                TokenType.OpAdd => 3,
                 TokenType.OpSubtract => 4,
-                TokenType.OpAdd => 5,
-                TokenType.OpEqual => 6,
-                TokenType.OpNotEqual => 6,
+                TokenType.OpMultiply => 5,
+                TokenType.OpDivide => 6,
+                TokenType.OpAssign => 7,
                 _ => throw new ArgumentException($"Invalid operator type: {type}"),
             };
         }

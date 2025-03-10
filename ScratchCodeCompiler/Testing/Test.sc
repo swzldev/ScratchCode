@@ -1,5 +1,9 @@
 myVar = 0
 forever {
-	myVar = myVar + 1
-	myVar = 4
+	if myVar == 0 {
+		myVar = 2
+	}
+	else {
+		myVar = 0
+	}
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ScratchCodeCompiler.Scratch;
 
 namespace ScratchCodeCompiler.Parsing.AST
 {
@@ -23,6 +19,20 @@ namespace ScratchCodeCompiler.Parsing.AST
             ParentIf = parentIf;
             ElseIfStatement = ifStatement;
             Body = ifStatement.Body;
+        }
+
+        public ScratchBlock[] ToScratchBlocks()
+        {
+            List<ScratchBlock> blocks = [];
+            if (ElseIfStatement != null)
+            {
+                ElseIfStatement.ToScratchBlock(ref blocks);
+                return [.. blocks];
+            }
+            else
+            {
+                return Body.ToScratchBlocks();
+            }
         }
 
         public override string ToString()

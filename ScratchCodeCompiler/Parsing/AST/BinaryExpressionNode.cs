@@ -60,10 +60,10 @@ namespace ScratchCodeCompiler.Parsing.AST
                 else
                 {
                     ret = new(ScratchOpcode.Operator_Not, new ScratchVector2(0, 0));
-                    blocks.Add(ret);
                     // Add the comparison block to the input of the NOT block
                     ret.Inputs.Add(new("OPERAND", comparisonBlock));
                     comparisonBlock.Parent = ret;
+                    blocks.Add(comparisonBlock);
                 }
 
                 if (Left is VariableNode lVariable)
