@@ -9,30 +9,49 @@ namespace ScratchCodeCompiler.Parsing.AST
 {
     internal class FunctionDeclerationNode : StatementNode, IScratchBlockTranslatable
     {
-        private static Dictionary<string, FunctionDeclerationNode> GlobalFunctions { get; set; } = [];
+        private static Dictionary<string, FunctionDeclerationNode> globalFunctions = [];
+
+        public static FunctionDeclerationNode? GetDecleration(string name)
+        {
+            if (!globalFunctions.TryGetValue(name, out FunctionDeclerationNode? value))
+            {
+                return null;
+            }
+            return value;
+        }
 
         public string FunctionName { get; }
         public List<string> FunctionParams { get; }
+        public List<ScratchId> FunctionParamIds { get; } = [];
         public CodeBlockNode FunctionBody { get; }
 
-        private List<ScratchId> FunctionParamIds { get; set; } = [];
+        public string ProcCode { get; }
+
 
         public FunctionDeclerationNode(string name, List<string> parameters, CodeBlockNode body)
         {
             FunctionName = name;
             FunctionParams = parameters;
             FunctionBody = body;
+            ProcCode = $"{FunctionName} " + string.Join(' ', FunctionParams.Select(x => "%s"));
+            if (globalFunctions.ContainsKey(FunctionName))
+            {
+                throw new Exception($"Function {FunctionName} already defined");
+            }
+            globalFunctions.Add(FunctionName, this);
         }
 
         public ScratchBlock ToScratchBlock(ref List<ScratchBlock> blocks)
         {
             ScratchBlock defineBlock = new(ScratchOpcode.Procedures_Definition, ScratchUtility.GetNextGoodPosition());
+            defineBlock.flags = ScratchBlockFlags.NotStitchableAbove;
+            blocks.Add(defineBlock);
 
             // Setup function prototype
             ScratchBlock protoBlock = new(ScratchOpcode.Procedures_Prototype, defineBlock);
             blocks.Add(protoBlock);
 
-            ScratchMutation protoMutation = new($"{FunctionName} " + string.Join(' ', FunctionParams.Select(x => "%s"))); // Use string_number for all inputs temporarily (including booleans)
+            ScratchMutation protoMutation = new(ProcCode); // Use string_number for all inputs temporarily (including booleans)
 
             // Add function arguments
             for (int i = 0; i < FunctionParams.Count; i++)

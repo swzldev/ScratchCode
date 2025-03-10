@@ -158,10 +158,10 @@ namespace ScratchCodeCompiler.Parsing
 
         private FunctionCallNode ParseFunctionCall(string identifier)
         {
-            FunctionCallNode functionCall = new(identifier);
+            List<ExpressionNode> args = [];
             while (!IsAtEnd() && !Match(TokenType.GmCloseParen))
             {
-                functionCall.Arguments.Add(ParseBinaryExpression());
+                args.Add(ParseBinaryExpression());
                 if (!Match(TokenType.GmComma))
                 {
                     Advance();
@@ -172,7 +172,7 @@ namespace ScratchCodeCompiler.Parsing
             {
                 throw new Exception("Expected ')'");
             }
-            return functionCall;
+            return new(identifier, args);
         }
 
         private void Advance()

@@ -13,7 +13,7 @@ namespace ScratchCodeCompiler.Parsing.AST
 
         public ScratchBlock ToScratchBlock(ref List<ScratchBlock> blocks)
         {
-            ScratchBlock foreverBlock = new(ScratchOpcode.Control_Forever, ScratchUtility.GetNextGoodPosition());
+            ScratchBlock foreverBlock = new(ScratchOpcode.Control_Forever, new ScratchVector2(0, 0));
             blocks.Add(foreverBlock);
             if (Body.IsEmpty)
             {

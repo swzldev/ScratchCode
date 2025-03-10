@@ -21,8 +21,11 @@ namespace ScratchCodeCompiler.Parsing.AST
                 if (child is IScratchBlockTranslatable translatable)
                 {
                     ScratchBlock scratchBlock = translatable.ToScratchBlock(ref blocks);
-                    lastBlock?.Stitch(scratchBlock);
-                    lastBlock = scratchBlock;
+                    if (!scratchBlock.flags.HasFlag(ScratchBlockFlags.NotStitchableAbove))
+                    {
+                        lastBlock?.Stitch(scratchBlock);
+                        lastBlock = scratchBlock;
+                    }
                 }
                 else
                 {

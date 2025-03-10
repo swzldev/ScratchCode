@@ -19,6 +19,8 @@ namespace ScratchCodeCompiler.Scratch
 
         public bool IsTopLevel => Parent == null;
 
+        public ScratchBlockFlags flags;
+
         public ScratchBlock(ScratchOpcode opcode)
         {
             Opcode = opcode;
