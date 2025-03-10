@@ -8,6 +8,8 @@ namespace ScratchCodeCompiler.Scratch
 {
     internal enum ScratchOpcode
     {
+        None,
+
         // Motion
         Motion_MoveSteps,
         Motion_TurnRight,
@@ -33,6 +35,11 @@ namespace ScratchCodeCompiler.Scratch
         Operator_Subtract,
         Operator_Multiply,
         Operator_Divide,
+        Operator_GT,
+        Operator_LT,
+        Operator_Equals,
+
+        Operator_Not,
 
         // Data
         Data_SetVariableTo,

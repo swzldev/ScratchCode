@@ -8,10 +8,10 @@ namespace ScratchCodeCompiler.Parsing.AST
 {
     internal class RepeatStatementNode : StatementNode
     {
-        public int RepeatCount { get; }
+        public ExpressionNode RepeatCount { get; }
         public CodeBlockNode Body { get; set; }
 
-        public RepeatStatementNode(int repeatCount, CodeBlockNode body)
+        public RepeatStatementNode(ExpressionNode repeatCount, CodeBlockNode body)
         {
             RepeatCount = repeatCount;
             Body = body;

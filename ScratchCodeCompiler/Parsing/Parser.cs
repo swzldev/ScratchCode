@@ -8,8 +8,6 @@ namespace ScratchCodeCompiler.Parsing
         private List<Token> tokens;
         private int currentTokenIndex = 0;
 
-        private Dictionary<string, VariableNode> variables = [];
-
         public Parser(List<Token> tokens)
         {
             this.tokens = tokens;
@@ -20,9 +18,8 @@ namespace ScratchCodeCompiler.Parsing
             ProgramNode program = new();
             while (!IsAtEnd())
             {
-                program.AddStatement(ParseExpression());
+                program.AddExpression(ParseExpression());
             }
-            program.Variables = variables;
             return program;
         }
 
@@ -49,6 +46,26 @@ namespace ScratchCodeCompiler.Parsing
             if (Match(TokenType.KwIf))
             {
                 return ParseIfStatement();
+            }
+            if (Match(TokenType.KwForever))
+            {
+                return new ForeverStatementNode(ParseCodeBlock());
+            }
+            if (Match(TokenType.KwRepeat))
+            {
+                return new RepeatStatementNode(ParseBinaryExpression(), ParseCodeBlock());
+            }
+            if (Match(TokenType.KwRepeatUntil))
+            {
+
+            }
+            if (Match(TokenType.KwWait))
+            {
+
+            }
+            if (Match(TokenType.KwWaitUntil))
+            {
+
             }
             return ParseBinaryExpression();
         }
@@ -79,7 +96,7 @@ namespace ScratchCodeCompiler.Parsing
             while (!IsAtEnd() && Operators.IsOperator(Peek().Type) && Operators.GetPrecedence(Peek().Type) > precedence)
             {
                 Token op = Consume();
-                ASTNode right = ParseBinaryExpression(Operators.GetPrecedence(op.Type));
+                ExpressionNode right = ParseBinaryExpression(Operators.GetPrecedence(op.Type));
                 left = new BinaryExpressionNode(left, right, op.Type);
             }
             return left;
@@ -93,15 +110,33 @@ namespace ScratchCodeCompiler.Parsing
             }
             if (Match(TokenType.Identifier))
             {
-                if (variables.ContainsKey(Previous().Value))
+                string identifier = Previous().Value;
+                if (Match(TokenType.GmOpenParen))
                 {
-                    return variables[Previous().Value];
+                    return ParseFunctionCall(identifier);
                 }
-                VariableNode variable = new(Previous().Value);
-                variables.Add(variable.VariableName, variable);
-                return variable;
+                return new VariableNode(Previous().Value);
             }
             throw new Exception("Expected identifier or literal");
+        }
+
+        private FunctionCallNode ParseFunctionCall(string identifier)
+        {
+            FunctionCallNode functionCall = new(identifier);
+            while (!IsAtEnd() && !Match(TokenType.GmCloseParen))
+            {
+                functionCall.Arguments.Add(ParseBinaryExpression());
+                if (!Match(TokenType.GmComma))
+                {
+                    Advance();
+                    break;
+                }
+            }
+            if (Previous().Type != TokenType.GmCloseParen)
+            {
+                throw new Exception("Expected ')'");
+            }
+            return functionCall;
         }
 
         private void Advance()

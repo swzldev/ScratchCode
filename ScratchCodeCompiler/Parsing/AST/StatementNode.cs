@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScratchCodeCompiler.Scratch;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,9 @@ namespace ScratchCodeCompiler.Parsing.AST
 {
     internal class StatementNode : ASTNode
     {
+        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

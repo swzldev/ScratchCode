@@ -19,7 +19,11 @@ namespace ScratchCodeCompiler.Lexical
             {
                 "if" => TokenType.KwIf,
                 "else" => TokenType.KwElse,
+                "forever" => TokenType.KwForever,
                 "repeat" => TokenType.KwRepeat,
+                "repeatuntil" => TokenType.KwRepeatUntil,
+                "wait" => TokenType.KwWait,
+                "waituntil" => TokenType.KwWaitUntil,
                 _ => TokenType.Identifier
             };
             return keywordType != TokenType.Identifier;

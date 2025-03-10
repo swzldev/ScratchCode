@@ -12,15 +12,26 @@ namespace ScratchCodeCompiler.Scratch
         public ScratchOpcode Opcode { get; }
         public ScratchBlock? Next { get; set; }
         public ScratchBlock? Parent { get; set; }
-        public ScratchBlockInput[] Inputs { get; set; }
+        public List<ScratchInput> Inputs { get; set; } = [];
+        public List<ScratchField> Fields { get; set; } = [];
         public ScratchVector2 Position { get; set; }
+
+        public bool IsTopLevel => Parent == null;
 
         public ScratchBlock(ScratchOpcode opcode, ScratchVector2 position)
         {
             Opcode = opcode;
             Position = position;
             Id = new ScratchId();
-            Inputs = new ScratchBlockInput[2];
+        }
+
+        public ScratchBlock(ScratchOpcode opcode, ScratchVector2 position, ScratchBlock parent)
+        {
+            Opcode = opcode;
+            Position = position;
+            Id = new ScratchId();
+            Parent = parent;
+            Parent.Next = this;
         }
 
         public string ToJson()
@@ -30,10 +41,14 @@ namespace ScratchCodeCompiler.Scratch
             json += $"\"opcode\":\"{Opcode.ToString().ToLower()}\",";
             json += $"\"next\":{(Next == null ? "null" : Next.Id.ToJson())},";
             json += $"\"parent\":{(Parent == null ? "null" : Parent.Id.ToJson())},";
-            json += "\"inputs\":{},"; // TODO: Implement inputs
-            json += "\"fields\":{},";
+            json += "\"inputs\":{";
+            json += string.Join(",", Inputs.Select(i => i.ToJson()));
+            json += "},";
+            json += "\"fields\":{";
+            json += string.Join(",", Fields.Select(f => f.ToJson()));
+            json += "},";
             json += "\"shadow\":false,";
-            json += "\"topLevel\":true,";
+            json += $"\"topLevel\":{IsTopLevel.ToString().ToLower()},";
             json += Position.ToJson();
             json += "}";
             return json;

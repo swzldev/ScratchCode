@@ -19,10 +19,9 @@ namespace ScratchCodeCompiler.Scratch
 
         public string ToJson()
         {
-            string json = "{";
-            json += $"{Id.ToJson()}:[";
+            string json = $"{Id.ToJson()}:[";
             json += $"\"{Name}\",0"; // 0 is the default value
-            json += "]}";
+            json += "]";
             return json;
         }
     }

@@ -1,18 +1,30 @@
-﻿namespace ScratchCodeCompiler.Parsing.AST
+﻿using ScratchCodeCompiler.Scratch;
+
+namespace ScratchCodeCompiler.Parsing.AST
 {
     internal class ProgramNode : ASTNode
     {
-        public List<ASTNode> Statements { get; private set; } = [];
-        public Dictionary<string, VariableNode> Variables { get; set; } = [];
+        public List<ASTNode> Code { get; private set; } = [];
 
-        public void AddStatement(ASTNode statement)
+        public void AddExpression(ASTNode expr)
         {
-            Statements.Add(statement);
+            Code.Add(expr);
+        }
+
+        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock)
+        {
+            returnBlock = null;
+            List<ScratchBlock> blocks = [];
+            foreach (var node in Code)
+            {
+                blocks.AddRange(node.ToScratchBlocks(out _));
+            }
+            return blocks.ToArray();
         }
 
         public override string ToString()
         {
-            return $"Program {{\n{string.Join("\n", Statements)}\n}}";
+            return $"Program {{\n{string.Join("\n", Code)}\n}}";
         }
     }
 }

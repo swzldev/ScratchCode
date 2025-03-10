@@ -49,25 +49,11 @@ namespace ScratchCodeCompiler.Scratch
             json += $"\"isStage\":{isStage.ToString().ToLower()},";
             json += $"\"name\":\"{name}\",";
             json += "\"variables\":{";
-            for (int i = 0; i < variables.Count; i++)
-            {
-                json += variables[i].ToJson();
-                if (i < variables.Count - 1)
-                {
-                    json += ",";
-                }
-            }
+            json += string.Join(',', variables.Select(variable => variable.ToJson()));
             json += "},\"lists\":{},"; // TODO: Implement ScratchList
             json += "\"broadcasts\":{},"; // TODO: Implement ScratchBroadcast
             json += "\"blocks\":{";
-            for (int i = 0; i < blocks.Count; i++)
-            {
-                json += blocks[i].ToJson();
-                if (i < blocks.Count - 1)
-                {
-                    json += ",";
-                }
-            }
+            json += string.Join(',', blocks.Select(block => block.ToJson()));
             json += "},\"comments\":{},"; // TODO: Implement ScratchComment
             json += $"\"currentCostume\":{currentCostume},";
             json += "\"costumes\":[";

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ScratchCodeCompiler.Scratch;
 
 namespace ScratchCodeCompiler.Parsing.AST
 {
-    internal class ASTNode
+    internal abstract class ASTNode
     {
+        public abstract ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock);
     }
 }

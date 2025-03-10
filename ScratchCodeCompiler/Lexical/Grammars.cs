@@ -18,6 +18,8 @@ namespace ScratchCodeCompiler.Lexical
                 '}' => TokenType.GmCloseBrace,
                 '[' => TokenType.GmOpenBracket,
                 ']' => TokenType.GmCloseBracket,
+                ',' => TokenType.GmComma,
+                ';' => TokenType.GmSemicolon,
                 _ => TokenType.Identifier
             };
             return grammarType != TokenType.Identifier;

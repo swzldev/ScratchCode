@@ -8,7 +8,11 @@
         // Keywords
         KwIf,
         KwElse,
+        KwForever,
         KwRepeat,
+        KwRepeatUntil,
+        KwWait,
+        KwWaitUntil,
 
         // Operators
         OpAssign,
@@ -26,6 +30,8 @@
         GmCloseBrace,
         GmCloseBracket,
         GmOpenBracket,
+        GmComma,
+        GmSemicolon,
 
         EOF
     }

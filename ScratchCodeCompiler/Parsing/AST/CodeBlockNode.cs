@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScratchCodeCompiler.Scratch;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,11 @@ namespace ScratchCodeCompiler.Parsing.AST
         public CodeBlockNode()
         {
             Children = [];
+        }
+
+        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock)
+        {
+            throw new NotImplementedException();
         }
 
         public override string ToString()

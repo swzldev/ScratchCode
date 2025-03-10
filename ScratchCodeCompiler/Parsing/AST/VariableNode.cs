@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScratchCodeCompiler.Scratch;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,27 +9,21 @@ namespace ScratchCodeCompiler.Parsing.AST
 {
     internal class VariableNode : ExpressionNode
     {
-        private static List<string> variables = [];
-
         public string VariableName { get; }
-        public bool IsDecleration { get; }
 
         public VariableNode(string variableName)
         {
             VariableName = variableName;
-            if (!variables.Contains(VariableName))
-            {
-                IsDecleration = true;
-                variables.Add(VariableName);
-            }
+        }
+
+        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock)
+        {
+            returnBlock = null;
+            return [];
         }
 
         public override string ToString()
         {
-            if (IsDecleration)
-            {
-                return $"VariableDecleration({VariableName})";
-            }
             return $"Variable({VariableName})";
         }
     }

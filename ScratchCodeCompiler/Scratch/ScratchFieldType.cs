@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace ScratchCodeCompiler.Scratch
 {
-    internal class ScratchBlockInput
+    internal enum ScratchFieldType
     {
+        Variable
     }
 }
