@@ -16,7 +16,7 @@ namespace ScratchCodeCompiler.Parsing.AST
             Children = [];
         }
 
-        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock)
+        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock, out ScratchVariable? returnVar)
         {
             throw new NotImplementedException();
         }

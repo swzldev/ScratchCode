@@ -23,42 +23,48 @@ namespace ScratchCodeCompiler.Scratch
             LiteralValue = literalValue;
         }
 
-        public ScratchInput(string name, ScratchBlock block, ScratchInputFormat defaultFormat, bool ptr = false)
+        public ScratchInput(string name, ScratchBlock block)
         {
-            if (ptr)
-            {
-                Type = ScratchInputType.BlockPointer;
-            }
-            else
-            {
-                Type = ScratchInputType.Block;
-            }
+            Type = ScratchInputType.Block;
+            Name = name;
+            Block = block;
+            LiteralValue = "";
+        }
+
+        public ScratchInput(string name, ScratchBlock block, ScratchInputFormat defaultFormat)
+        {
+            Type = ScratchInputType.Expression;
             Name = name;
             Format = defaultFormat;
             Block = block;
-            LiteralValue = "grapefruit";
+            LiteralValue = "";
         }
 
         public ScratchInput(string name, ScratchInputFormat format, ScratchVariable variable)
         {
-            Type = ScratchInputType.Block;
+            Type = ScratchInputType.Expression;
             Name = name;
             Format = format;
             Variable = variable;
-            LiteralValue = "grapefruit";
+            LiteralValue = "";
         }
 
         public string ToJson()
         {
             // "STRING2":[3,"Yd.%(U?CL.sF|AKa1v7M",[10,"banana"]]
-            if (Type == ScratchInputType.Block)
+            if (Type == ScratchInputType.Expression)
             {
-                return $"\"{Name}\":[{(int)Type},\"{Block?.Id}\",[{(int)Format},\"{LiteralValue}\"]]";
+                // "VALUE":[3,[12,"myVar","98x7VmWgo0LxQ4lj5pzy"],[4,"534353"]]
+                if (Variable != null)
+                {
+                    return $"\"{Name}\":[{(int)Type},[{(int)ScratchInputFormat.Variable},{Variable?.Id.ToJson()}],[{(int)Format},{LiteralValue}]]";
+                }
+                return $"\"{Name}\":[{(int)Type},{Block?.Id.ToJson()},[{(int)Format},\"{LiteralValue}\"]]";
             }
             // "SUBSTACK2":[2,"eKEwGJ3EX88WeN(7JS7K"]
-            else if (Type == ScratchInputType.BlockPointer)
+            else if (Type == ScratchInputType.Block)
             {
-                return $"\"{Name}\":[{(int)Type},\"{Block?.Id}\"]";
+                return $"\"{Name}\":[{(int)Type},{Block?.Id.ToJson()}]";
             }
             // "STRING2":[1,[10,"banana"]]
             return $"\"{Name}\":[{(int)Type},[{(int)Format},\"{LiteralValue}\"]]";

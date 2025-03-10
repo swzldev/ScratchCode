@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Scratch\ScratchBlocks.md" />
+    <None Remove="Scratch\ScratchBlocks.md" />
   </ItemGroup>
 
 </Project>

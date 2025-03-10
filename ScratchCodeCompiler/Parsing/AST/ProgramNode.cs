@@ -11,13 +11,14 @@ namespace ScratchCodeCompiler.Parsing.AST
             Code.Add(expr);
         }
 
-        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock)
+        public override ScratchBlock[] ToScratchBlocks(out ScratchBlock? returnBlock, out ScratchVariable? returnVar)
         {
             returnBlock = null;
+            returnVar = null;
             List<ScratchBlock> blocks = [];
             foreach (var node in Code)
             {
-                blocks.AddRange(node.ToScratchBlocks(out _));
+                blocks.AddRange(node.ToScratchBlocks(out _, out _));
             }
             return blocks.ToArray();
         }

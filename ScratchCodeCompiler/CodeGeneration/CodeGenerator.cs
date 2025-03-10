@@ -18,7 +18,6 @@ namespace ScratchCodeCompiler.CodeGeneration
 
         public void Generate()
         {
-            return;
             // Set up output files
             if (!Directory.Exists(OutputPath))
             {
@@ -31,6 +30,11 @@ namespace ScratchCodeCompiler.CodeGeneration
             string projectJsonPath = Path.Combine(IntermediatePath, "project.json");
 
             ScratchProject project = new();
+            // All projects contain a stage
+            ScratchTarget stage = new("Stage", true);
+            project.Targets.Add(stage);
+
+            stage.blocks.AddRange(Program.ToScratchBlocks(out _, out _));
 
             File.WriteAllText(projectJsonPath, project.ToJson());
         }

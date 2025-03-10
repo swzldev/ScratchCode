@@ -10,6 +10,13 @@ namespace ScratchCodeCompiler
     {
         static void Main(string[] args)
         {
+            VariableNode result = new("result");
+            result.ScratchVariable.Id.Id = "98x7VmWgo0LxQ4lj5pzy";
+            BinaryExpressionNode expr = new(result, new BinaryExpressionNode(new BinaryExpressionNode(new NumberLiteralNode(2), new NumberLiteralNode(2), TokenType.OpAdd), new NumberLiteralNode(4), TokenType.OpNotEqual), TokenType.OpAssign);
+            ScratchBlock[] blocks = expr.ToScratchBlocks(out _, out _);
+            Console.WriteLine(string.Join(',', blocks.Select(b => b.ToJson())));
+
+            return;
             ScratchProject project = new();
             ScratchTarget stage = new("Stage", true);
 

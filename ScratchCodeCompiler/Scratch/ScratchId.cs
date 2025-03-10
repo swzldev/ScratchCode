@@ -8,7 +8,7 @@ namespace ScratchCodeCompiler.Scratch
 {
     internal class ScratchId : IScratchJsonable
     {
-        public string Id { get; }
+        public string Id { get; set; }
 
         public ScratchId(int length = 20, bool useGrammar = true)
         {
