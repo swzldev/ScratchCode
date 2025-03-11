@@ -73,8 +73,8 @@ namespace ScratchCodeCompiler.ErrorHandling
         /// </summary>
         public static readonly KeyValuePair<int, string> CS16 = new(16, "Events cannot be declared within other events");
         /// <summary>
-        /// Statements cannot be used outside a function or event
+        /// Statements can only be used within a function or event
         /// </summary>
-        public static readonly KeyValuePair<int, string> CS17 = new(17, "Statements cannot be used outside a function or event");
+        public static readonly KeyValuePair<int, string> CS17 = new(17, "Statements can only be used within a function or event");
     }
 }
