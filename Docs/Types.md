@@ -1,0 +1,2 @@
+# Types
+Whilst ScratchCode doesn't really care about types, you may or may not have problems when using them incorrectly. In Scratch, there are 2 types: String and Boolean (note that number values are also passed as string).

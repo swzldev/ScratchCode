@@ -7,9 +7,9 @@ namespace ScratchCodeCompiler.Scratch
     {
         public static string GenerateRandomId(int length = 20, bool useGrammar = true)
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789;%$=-+#~?!|()[]";
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789;%$=-+#~?!|()[].^*";
             const string charsNoGrammar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            StringBuilder result = new StringBuilder(length);
+            StringBuilder result = new(length);
             using (var rng = RandomNumberGenerator.Create())
             {
                 byte[] uintBuffer = new byte[sizeof(uint)];

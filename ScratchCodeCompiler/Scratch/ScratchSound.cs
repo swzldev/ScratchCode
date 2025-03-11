@@ -11,7 +11,7 @@ namespace ScratchCodeCompiler.Scratch
         public string name;
         public string assetId;
         public SoundDataFormat dataFormat;
-        public string format; // Always ""
+        public string format = ""; // Always ""
         public int rate;
         public int sampleCount;
         public string md5ext;

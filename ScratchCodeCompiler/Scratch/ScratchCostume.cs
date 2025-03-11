@@ -23,6 +23,7 @@ namespace ScratchCodeCompiler.Scratch
 
         public string ToJson()
         {
+            // "name":"backdrop1","dataFormat":"svg","assetId":"cd21514d0531fdffb22204e0ec5ed84a","md5ext":"cd21514d0531fdffb22204e0ec5ed84a.svg","rotationCenterX":240,"rotationCenterY":180
             string json = "{";
             json += $"\"name\":\"{name}\",";
             json += $"\"dataFormat\":\"{dataFormat.ToString().ToLower()}\",";

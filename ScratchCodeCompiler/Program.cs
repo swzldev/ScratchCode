@@ -1,4 +1,5 @@
 ﻿using ScratchCodeCompiler.CodeGeneration;
+using ScratchCodeCompiler.ErrorHandling;
 using ScratchCodeCompiler.Lexical;
 using ScratchCodeCompiler.Parsing;
 using ScratchCodeCompiler.Parsing.AST;
@@ -11,12 +12,24 @@ namespace ScratchCodeCompiler
         static void Main(string[] args)
         {
             string inputFilePath = string.Empty;
+            string? exePath = Environment.ProcessPath;
+            if (exePath == null)
+            {
+                SCOutput.Error("Could not determine executable path.");
+                return;
+            }
+            DirectoryInfo exeDir = new FileInfo(exePath).Directory!;
+            string outputDirectory = Path.Combine(exeDir.FullName, "Output");
             if (args.Length == 0)
             {
                 while (!File.Exists(inputFilePath))
                 {
                     Console.Write("Input file path: ");
                     inputFilePath = Console.ReadLine() ?? "";
+                    if (!File.Exists(inputFilePath))
+                    {
+                        SCOutput.Error("File does not exist.");
+                    }
                 }
             }
             else
@@ -24,25 +37,25 @@ namespace ScratchCodeCompiler
                 inputFilePath = args[0];
             }
 
-            string[] inputFileLines = File.ReadAllLines(inputFilePath);
-            string input = string.Join("\n", inputFileLines);
+            string[] input = File.ReadAllLines(inputFilePath);
+            SCErrorHelper.InputLines = input;
 
+            DateTime start = DateTime.UtcNow;
+
+            SCOutput.Log("Generating project...");
             Lexer lexer = new(input);
             List<Token> tokens = lexer.Tokenize();
-
-            foreach (Token token in tokens)
-            {
-                Console.WriteLine(token.ToString());
-            }
-            Console.WriteLine();
 
             Parser parser = new(tokens);
             ProgramNode program = parser.Parse();
 
-            Console.WriteLine(program.ToString());
-
-            CodeGenerator generator = new(program, "D:\\ScratchCompilerOutput");
+            CodeGenerator generator = new(program, outputDirectory);
             generator.Generate();
+
+            DateTime complete = DateTime.UtcNow;
+            TimeSpan duration = complete - start;
+
+            SCOutput.Log($"\nCompilation successful. [Time: {duration}]", ConsoleColor.Green);
 
             Console.ReadKey();
         }

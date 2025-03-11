@@ -27,6 +27,7 @@ namespace ScratchCodeCompiler.Scratch
 
         public string ToJson()
         {
+            // "tagName":"mutation","children":[],"proccode":"testfn %s","argumentids":"[\".64v]p(*B=^U1+iK82}H\"]","argumentnames":"[\"param1\"]","argumentdefaults":"[\"\"]","warp":"false"
             string json = $"\"tagName\":\"mutation\",\"children\":[],\"proccode\":\"{ProcCode}\",\"argumentids\":\"[";
             for (int i = 0; i < ArgumentIds.Count; i++)
             {

@@ -1,3 +1,3 @@
-func MyFunc(text) {
+func MyF(text) {
 }
 MyFunc(3)

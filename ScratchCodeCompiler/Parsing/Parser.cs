@@ -1,4 +1,5 @@
-﻿using ScratchCodeCompiler.Lexical;
+﻿using ScratchCodeCompiler.ErrorHandling;
+using ScratchCodeCompiler.Lexical;
 using ScratchCodeCompiler.Parsing.AST;
 
 namespace ScratchCodeCompiler.Parsing
@@ -27,7 +28,7 @@ namespace ScratchCodeCompiler.Parsing
         {
             if (!Match(TokenType.GmOpenBrace))
             {
-                throw new Exception("Expected '{'");
+                SCError.HandleError(SCErrors.CS4, Peek());
             }
             CodeBlockNode codeBlock = new();
             while (!IsAtEnd() && !Match(TokenType.GmCloseBrace))
@@ -36,7 +37,7 @@ namespace ScratchCodeCompiler.Parsing
             }
             if (Previous().Type != TokenType.GmCloseBrace)
             {
-                throw new Exception("Expected '}'");
+                SCError.HandleError(SCErrors.CS5, Previous());
             }
             return codeBlock;
         }
@@ -78,19 +79,19 @@ namespace ScratchCodeCompiler.Parsing
         {
             if (!Match(TokenType.Identifier))
             {
-                throw new Exception("Expected identifier");
+                SCError.HandleError(SCErrors.CS1, Peek());
             }
             string identifier = Previous().Value;
             if (!Match(TokenType.GmOpenParen))
             {
-                throw new Exception("Expected '('");
+                SCError.HandleError(SCErrors.CS2, Peek());
             }
             List<string> parameters = [];
             while (!IsAtEnd() && !Match(TokenType.GmCloseParen))
             {
                 if (!Match(TokenType.Identifier))
                 {
-                    throw new Exception("Expected identifier");
+                    SCError.HandleError(SCErrors.CS1, Peek());
                 }
                 parameters.Add(Previous().Value);
                 if (!Match(TokenType.GmComma))
@@ -101,7 +102,7 @@ namespace ScratchCodeCompiler.Parsing
             }
             if (Previous().Type != TokenType.GmCloseParen)
             {
-                throw new Exception("Expected ')'");
+                SCError.HandleError(SCErrors.CS3, Previous());
             }
             return new(identifier, parameters, ParseCodeBlock());
         }
@@ -153,7 +154,8 @@ namespace ScratchCodeCompiler.Parsing
                 }
                 return new VariableNode(Previous().Value);
             }
-            throw new Exception("Expected identifier or literal");
+            SCError.HandleError(SCErrors.CS6, Peek());
+            return default!;
         }
 
         private FunctionCallNode ParseFunctionCall(string identifier)
@@ -170,7 +172,7 @@ namespace ScratchCodeCompiler.Parsing
             }
             if (Previous().Type != TokenType.GmCloseParen)
             {
-                throw new Exception("Expected ')'");
+                SCError.HandleError(SCErrors.CS3, Previous());
             }
             return new(identifier, args);
         }
@@ -210,11 +212,6 @@ namespace ScratchCodeCompiler.Parsing
                 return true;
             }
             return false;
-        }
-
-        private bool CheckGrammar()
-        {
-            return Check(TokenType.GmOpenParen) || Check(TokenType.GmCloseParen) || Check(TokenType.GmOpenBracket) || Check(TokenType.GmCloseBracket) || Check(TokenType.GmOpenBrace) || Check(TokenType.GmCloseBrace);
         }
 
         private bool IsAtEnd()

@@ -2,61 +2,70 @@
 {
     internal class Lexer
     {
-        private string code;
+        private string[] codeLines;
         private List<Token> tokens;
 
-        public Lexer(string code)
+        private int line = 1;
+        private int column = 1;
+
+        public Lexer(string[] codeLines)
         {
-            this.code = code;
+            this.codeLines = codeLines;
             tokens = [];
         }
 
         public List<Token> Tokenize()
         {
             string word = string.Empty;
-            for (int i = 0; i < code.Length; i++)
+            foreach (string codeLine in codeLines)
             {
-                char c = code[i];
-                if (Operators.TryGetOperator(code, ref i, out TokenType opType))
+                for (int i = 0; i < codeLine.Length; i++)
                 {
-                    TryAddWord(ref word);
-                    tokens.Add(new Token(opType, Operators.GetOperatorString(opType)));
-                    continue;
+                    char c = codeLine[i];
+                    if (Operators.TryGetOperator(codeLine, ref i, out TokenType opType))
+                    {
+                        TryAddWord(ref word, line, column);
+                        tokens.Add(new Token(opType, Operators.GetOperatorString(opType), line, column));
+                        column += Operators.GetOperatorLength(opType) - 1;
+                    }
+                    else if (Grammars.TryGetGrammar(c, out TokenType gmType))
+                    {
+                        TryAddWord(ref word, line, column);
+                        tokens.Add(new Token(gmType, c.ToString(), line, column));
+                    }
+                    else if (char.IsWhiteSpace(c))
+                    {
+                        TryAddWord(ref word, line, column);
+                        word = string.Empty;
+                    }
+                    else word += c;
+                    column++;
                 }
-                if (Grammars.TryGetGrammar(c, out TokenType gmType)) {
-                    TryAddWord(ref word);
-                    tokens.Add(new Token(gmType, c.ToString()));
-                    continue;
-                }
-                if (char.IsWhiteSpace(c))
-                {
-                    TryAddWord(ref word);
-                    word = string.Empty;
-                    continue;
-                }
-                word += c;
+                TryAddWord(ref word, line, column);
+                line++;
+                column = 1;
             }
-            TryAddWord(ref word);
-            tokens.Add(new Token(TokenType.EOF, string.Empty));
+            TryAddWord(ref word, line, column);
+            tokens.Add(new Token(TokenType.EOF, string.Empty, line, column));
 
             return tokens;
         }
 
-        private bool TryAddWord(ref string word)
+        private bool TryAddWord(ref string word, int l, int c)
         {
             if (!string.IsNullOrEmpty(word))
             {
                 if (long.TryParse(word, out _))
                 {
-                    tokens.Add(new Token(TokenType.Number, word));
+                    tokens.Add(new Token(TokenType.Number, word, l, c - word.Length));
                 }
                 else
                 {
                     if (Keywords.TryGetKeyword(word, out TokenType type))
                     {
-                        tokens.Add(new Token(type, word));
+                        tokens.Add(new Token(type, word, l, c - word.Length));
                     }
-                    else tokens.Add(new Token(TokenType.Identifier, word));
+                    else tokens.Add(new Token(TokenType.Identifier, word, l, c - word.Length));
                 }
                 word = string.Empty;
                 return true;

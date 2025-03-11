@@ -57,23 +57,9 @@ namespace ScratchCodeCompiler.Scratch
             json += "},\"comments\":{},"; // TODO: Implement ScratchComment
             json += $"\"currentCostume\":{currentCostume},";
             json += "\"costumes\":[";
-            for (int i = 0; i < costumes.Count; i++)
-            {
-                json += costumes[i].ToJson();
-                if (i < costumes.Count - 1)
-                {
-                    json += ",";
-                }
-            }
+            json += string.Join(',', costumes.Select(costume => costume.ToJson()));
             json += "],\"sounds\":[";
-            for (int i = 0; i < sounds.Count; i++)
-            {
-                json += sounds[i].ToJson();
-                if (i < sounds.Count - 1)
-                {
-                    json += ",";
-                }
-            }
+            json += string.Join(',', sounds.Select(sound => sound.ToJson()));
             json += $"],\"volume\":{volume},";
             json += $"\"layerOrder\":{layerOrder},";
             json += $"\"tempo\":{tempo},";
