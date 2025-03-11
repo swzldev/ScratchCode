@@ -28,8 +28,22 @@ namespace ScratchCodeCompiler.Parsing.AST
             ScratchMutation callMutation = new(Decleration.ProcCode);
             for (int i = 0; i < Decleration.FunctionParams.Count; i++)
             {
-                callMutation.AddArgument(Decleration.FunctionParamIds[i], Decleration.FunctionParams[i], "");
-                callBlock.Inputs.Add(new(Decleration.FunctionParamIds[i].Id, ScratchInputFormat.String, ""));
+                ScratchId paramId = Decleration.FunctionParamIds[i];
+                callMutation.AddArgument(paramId, Decleration.FunctionParams[i], "");
+                if (FunctionArguments[i] is VariableNode variable)
+                {
+                    callBlock.Inputs.Add(new(paramId.Id, ScratchInputFormat.String, variable.ScratchVariable));
+                }
+                else if (FunctionArguments[i] is NumberLiteralNode literal)
+                {
+                    callBlock.Inputs.Add(new(paramId.Id, ScratchInputFormat.String, literal.Value.ToString()));
+                }
+                else
+                {
+                    ScratchBlock exprResult = (FunctionArguments[i] as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
+                    blocks.Add(exprResult);
+                    callBlock.Inputs.Add(new(paramId.Id, exprResult));
+                }
             }
             callBlock.Mutation = callMutation;
             return callBlock;

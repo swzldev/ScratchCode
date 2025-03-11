@@ -43,6 +43,10 @@ namespace ScratchCodeCompiler.ErrorHandling
         /// <summary>
         /// Undeclared function
         /// </summary>
-        public static readonly KeyValuePair<int, string> CS9 = new(8, "Undeclared function");
+        public static readonly KeyValuePair<int, string> CS9 = new(9, "Undeclared function");
+        /// <summary>
+        /// Invalid number of arguments
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS10 = new(10, "Invalid number of arguments");
     }
 }

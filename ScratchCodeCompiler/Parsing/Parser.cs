@@ -208,7 +208,12 @@ namespace ScratchCodeCompiler.Parsing
             {
                 SCError.HandleError(SCErrors.CS3, Previous());
             }
-            return new(identifier.Value, args, functionDeclerations[identifier.Value]);
+            FunctionDeclerationNode decleration = functionDeclerations[identifier.Value];
+            if (args.Count != decleration.FunctionParams.Count)
+            {
+                SCError.HandleError(SCErrors.CS10, identifier);
+            }
+            return new(identifier.Value, args, decleration);
         }
 
         private void Advance()

@@ -31,6 +31,13 @@ namespace ScratchCodeCompiler.Parsing.AST
             defineBlock.flags = ScratchBlockFlags.NotStitchableAbove;
             blocks.Add(defineBlock);
 
+            if (!FunctionBody.IsEmpty)
+            {
+                ScratchBlock[] bodyBlocks = FunctionBody.ToScratchBlocks();
+                defineBlock.Stitch(bodyBlocks.First());
+                blocks.AddRange(bodyBlocks);
+            }
+            
             // Setup function prototype
             ScratchBlock protoBlock = new(ScratchOpcode.Procedures_Prototype, defineBlock);
             blocks.Add(protoBlock);

@@ -52,6 +52,7 @@ namespace ScratchCodeCompiler.Lexical
                 TokenType.OpSubtract => 4,
                 TokenType.OpMultiply => 5,
                 TokenType.OpDivide => 6,
+                TokenType.OpAssign => 7,
                 _ => throw new ArgumentException("op was not an Operator", nameof(op))
             };
         }
