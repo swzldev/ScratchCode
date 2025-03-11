@@ -9,6 +9,7 @@ namespace ScratchCodeCompiler.Scratch
     internal enum ScratchInputFormat
     {
         Number = 4,
+        WholeNumber = 6,
         Angle = 8,
         String = 10,
         Variable = 12,
