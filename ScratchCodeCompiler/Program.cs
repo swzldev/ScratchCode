@@ -38,7 +38,6 @@ namespace ScratchCodeCompiler
             }
 
             string[] input = File.ReadAllLines(inputFilePath);
-            SCErrorHelper.InputLines = input;
 
             DateTime start = DateTime.UtcNow;
 

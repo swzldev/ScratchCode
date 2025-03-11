@@ -46,13 +46,13 @@ namespace ScratchCodeCompiler.Lexical
         {
             return op switch
             {
-                TokenType.OpEqual => 1,
-                TokenType.OpNotEqual => 2,
-                TokenType.OpAdd => 3,
-                TokenType.OpSubtract => 4,
-                TokenType.OpMultiply => 5,
-                TokenType.OpDivide => 6,
-                TokenType.OpAssign => 7,
+                TokenType.OpAssign => 1,
+                TokenType.OpEqual => 2,
+                TokenType.OpNotEqual => 3,
+                TokenType.OpAdd => 4,
+                TokenType.OpSubtract => 5,
+                TokenType.OpMultiply => 6,
+                TokenType.OpDivide => 7,
                 _ => throw new ArgumentException("op was not an Operator", nameof(op))
             };
         }

@@ -2,14 +2,18 @@
 using ScratchCodeCompiler.Lexical;
 using ScratchCodeCompiler.Parsing.AST;
 using ScratchCodeCompiler.Scratch;
+using System.Linq;
 
 namespace ScratchCodeCompiler.Parsing
 {
     internal class Parser
     {
+        private ParserFlags parserFlags = ParserFlags.None;
+
         private List<Token> tokens;
         private int currentTokenIndex = 0;
 
+        private static readonly List<EventDeclerationNode> events = [];
         private static readonly Dictionary<string, VariableNode> variables = [];
         private static readonly Dictionary<string, FunctionDeclerationNode> functionDeclerations = [];
 
@@ -52,6 +56,15 @@ namespace ScratchCodeCompiler.Parsing
             CodeBlockNode codeBlock = new();
             while (!IsAtEnd() && !Match(TokenType.GmCloseBrace))
             {
+                if (parserFlags.HasFlag(ParserFlags.ForeverStatementInCurrentBlock))
+                {
+                    SCError.HandleWarning(SCWarnings.CSW1, Peek());
+                    while (!IsAtEnd() && !Match(TokenType.GmCloseBrace))
+                    {
+                        Advance();
+                    }
+                    break;
+                }
                 codeBlock.Children.Add(ParseExpression());
             }
             if (Previous().Type != TokenType.GmCloseBrace)
@@ -69,13 +82,19 @@ namespace ScratchCodeCompiler.Parsing
                 functionDeclerations.Add(funcDecl.FunctionName, funcDecl);
                 return funcDecl;
             }
+            if (Match(TokenType.KwEvent))
+            {
+                return ParseEventDecleration();
+            }
             if (Match(TokenType.KwIf))
             {
                 return ParseIfStatement();
             }
             if (Match(TokenType.KwForever))
             {
-                return new ForeverStatementNode(ParseCodeBlock());
+                ForeverStatementNode foreverNode = new(ParseCodeBlock());
+                parserFlags |= ParserFlags.ForeverStatementInCurrentBlock;
+                return foreverNode;
             }
             if (Match(TokenType.KwRepeat))
             {
@@ -94,6 +113,55 @@ namespace ScratchCodeCompiler.Parsing
 
             }
             return ParseBinaryExpression();
+        }
+
+        private EventDeclerationNode ParseEventDecleration()
+        {
+            if (!Match(TokenType.Identifier))
+            {
+                SCError.HandleError(SCErrors.CS1, Peek());
+            }
+            Token identifier = Previous();
+            // Find event
+            ScratchEvent? scratchEvent = null;
+            foreach (var sEvent in ScratchEvents.All)
+            {
+                if (sEvent.Name == identifier.Value)
+                {
+                    scratchEvent = sEvent;
+                    break;
+                }
+            }
+            if (scratchEvent == null)
+            {
+                SCError.HandleError(SCErrors.CS11, identifier);
+            }
+            if (scratchEvent!.Parameters.Length > 0)
+            {
+                if (!Match(TokenType.GmOpenParen))
+                {
+                    SCError.HandleError(SCErrors.CS2, Peek());
+                }
+                List<string> parameters = [];
+                while (!Match(TokenType.GmCloseParen))
+                {
+                    if (!Match(TokenType.Identifier))
+                    {
+                        SCError.HandleError(SCErrors.CS1, Peek());
+                    }
+                    parameters.Add(Previous().Value);
+                    if (!Match(TokenType.GmComma))
+                    {
+                        Advance();
+                        break;
+                    }
+                }
+                if (Previous().Type != TokenType.GmCloseParen)
+                {
+                    SCError.HandleError(SCErrors.CS3, Previous());
+                }
+            }
+            return new(scratchEvent, ParseCodeBlock());
         }
 
         private FunctionDeclerationNode ParseFunctionDeclaration()

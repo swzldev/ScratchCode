@@ -48,5 +48,9 @@ namespace ScratchCodeCompiler.ErrorHandling
         /// Invalid number of arguments
         /// </summary>
         public static readonly KeyValuePair<int, string> CS10 = new(10, "Invalid number of arguments");
+        /// <summary>
+        /// Unknown event
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS11 = new(11, "Unknown event");
     }
 }

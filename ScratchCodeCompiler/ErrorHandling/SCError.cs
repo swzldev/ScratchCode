@@ -19,5 +19,12 @@ namespace ScratchCodeCompiler.ErrorHandling
             Console.ReadKey();
             Environment.Exit(error.Key);
         }
+
+        public static void HandleWarning(KeyValuePair<int, string> warning, Token warningToken)
+        {
+            SCOutput.Warn($"\nWarning CS{warning.Key.ToString().PadLeft(4, '0')}: {warning.Value}.");
+            SCOutput.Warn(SCErrorHelper.InputLines[warningToken.Line - 1]);
+            SCOutput.Warn("^ HERE".PadLeft(warningToken.Column - 1 + 6));
+        }
     }
 }

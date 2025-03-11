@@ -7,6 +7,7 @@
 
         // Keywords
         KwFunc,
+        KwEvent,
         KwIf,
         KwElse,
         KwForever,

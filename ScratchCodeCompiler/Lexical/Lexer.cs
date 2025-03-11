@@ -1,4 +1,6 @@
-﻿namespace ScratchCodeCompiler.Lexical
+﻿using ScratchCodeCompiler.ErrorHandling;
+
+namespace ScratchCodeCompiler.Lexical
 {
     internal class Lexer
     {
@@ -10,7 +12,8 @@
 
         public Lexer(string[] codeLines)
         {
-            this.codeLines = codeLines;
+            this.codeLines = codeLines.Select(str => str.Replace("\t", "    ")).ToArray();
+            SCErrorHelper.InputLines = this.codeLines;
             tokens = [];
         }
 

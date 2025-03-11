@@ -52,16 +52,6 @@ namespace ScratchCodeCompiler.Scratch
             new("SetVolumeTo", ["VOLUME"], ScratchOpcode.Sound_SetVolumeTo),
             //new("Volume", [], ScratchOpcode.Sound_Volume),
 
-            // TODO: Set up event entry point functions
-            //new("WhenFlagClicked", [], ScratchOpcode.Event_WhenFlagClicked),
-            //new("WhenKeyPressed", ["KEY_OPTION"], ScratchOpcode.Event_WhenKeyPressed),
-            //new("WhenStageClicked", [], ScratchOpcode.Event_WhenStageClicked),
-            //new("WhenBackdropSwitchesTo", ["BACKDROP"], ScratchOpcode.Event_WhenBackdropSwitchesTo),
-            //new("WhenGreaterThan", ["WHENGREATERTHANMENU", "VALUE"], ScratchOpcode.Event_WhenGreaterThan),
-            //new("WhenBroadcastReceived", ["BROADCAST_OPTION"], ScratchOpcode.Event_WhenBroadcastReceived),
-            //new("Broadcast", ["BROADCAST_INPUT"], ScratchOpcode.Event_Broadcast),
-            //new("BroadcastAndWait", ["BROADCAST_INPUT"], ScratchOpcode.Event_BroadcastAndWait),
-
             new("Wait", ["DURATION"], ScratchOpcode.Control_Wait),
             //new("Repeat", ["TIMES"], ScratchOpcode.Control_Repeat),
             //new("Forever", [], ScratchOpcode.Control_Forever),

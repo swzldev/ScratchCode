@@ -13,9 +13,8 @@ namespace ScratchCodeCompiler.Parsing.AST
 
         public ScratchBlock[] ToScratchBlocks()
         {
-            ScratchBlock entry = new(ScratchOpcode.Event_WhenFlagClicked);
-            List<ScratchBlock> blocks = [entry];
-            ScratchBlock lastBlock = entry;
+            List<ScratchBlock> blocks = [];
+            ScratchBlock? lastBlock = null;
             foreach (ASTNode child in Code)
             {
                 if (child is IScratchBlockTranslatable translatable)
