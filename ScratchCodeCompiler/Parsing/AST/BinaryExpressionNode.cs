@@ -11,6 +11,8 @@ namespace ScratchCodeCompiler.Parsing.AST
         public ExpressionNode Right { get; }
         public TokenType Operator { get; }
 
+        public ScratchType ResultType => Operators.GetOperatorReturnType(Operator);
+
         public BinaryExpressionNode(ExpressionNode left, ExpressionNode right, TokenType op)
         {
             Left = left;

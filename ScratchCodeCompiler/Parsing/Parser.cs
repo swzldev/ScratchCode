@@ -202,7 +202,16 @@ namespace ScratchCodeCompiler.Parsing
 
         private IfStatementNode ParseIfStatement()
         {
+            Token expressionToken = Peek();
             ExpressionNode condition = ParseBinaryExpression();
+            if (condition is not BinaryExpressionNode)
+            {
+                SCError.HandleError(SCErrors.CS6, expressionToken);
+            }
+            if ((condition as BinaryExpressionNode)!.ResultType != ScratchType.Boolean)
+            {
+                SCError.HandleError(SCErrors.CS12, expressionToken);
+            }
             IfStatementNode ifStmt = new(condition, ParseCodeBlock());
             if (Match(TokenType.KwElse))
             {

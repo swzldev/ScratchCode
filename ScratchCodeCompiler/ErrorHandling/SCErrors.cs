@@ -52,5 +52,9 @@ namespace ScratchCodeCompiler.ErrorHandling
         /// Unknown event
         /// </summary>
         public static readonly KeyValuePair<int, string> CS11 = new(11, "Unknown event");
+        /// <summary>
+        /// Boolean expected
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS12 = new(12, "Boolean expected");
     }
 }
