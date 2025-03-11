@@ -9,17 +9,6 @@ namespace ScratchCodeCompiler.Parsing.AST
 {
     internal class FunctionDeclerationNode : StatementNode, IScratchBlockTranslatable
     {
-        private static Dictionary<string, FunctionDeclerationNode> globalFunctions = [];
-
-        public static FunctionDeclerationNode? GetDecleration(string name)
-        {
-            if (!globalFunctions.TryGetValue(name, out FunctionDeclerationNode? value))
-            {
-                return null;
-            }
-            return value;
-        }
-
         public string FunctionName { get; }
         public List<string> FunctionParams { get; }
         public List<ScratchId> FunctionParamIds { get; } = [];
@@ -34,11 +23,6 @@ namespace ScratchCodeCompiler.Parsing.AST
             FunctionParams = parameters;
             FunctionBody = body;
             ProcCode = $"{FunctionName} " + string.Join(' ', FunctionParams.Select(x => "%s"));
-            if (globalFunctions.ContainsKey(FunctionName))
-            {
-                throw new Exception($"Function {FunctionName} already defined");
-            }
-            globalFunctions.Add(FunctionName, this);
         }
 
         public ScratchBlock ToScratchBlock(ref List<ScratchBlock> blocks)

@@ -1,6 +1,7 @@
 ﻿using ScratchCodeCompiler.ErrorHandling;
 using ScratchCodeCompiler.Lexical;
 using ScratchCodeCompiler.Parsing.AST;
+using ScratchCodeCompiler.Scratch;
 
 namespace ScratchCodeCompiler.Parsing
 {
@@ -8,6 +9,19 @@ namespace ScratchCodeCompiler.Parsing
     {
         private List<Token> tokens;
         private int currentTokenIndex = 0;
+
+        private static readonly Dictionary<string, VariableNode> variables = [];
+        private static readonly Dictionary<string, FunctionDeclerationNode> functionDeclerations = [];
+
+        public static ScratchVariable[] GetAllScratchVariables()
+        {
+            ScratchVariable[] scratchVars = new ScratchVariable[variables.Count];
+            for (int i = 0; i < variables.Count; i++)
+            {
+                scratchVars[i] = variables.ElementAt(i).Value.ScratchVariable;
+            }
+            return scratchVars;
+        }
 
         public Parser(List<Token> tokens)
         {
@@ -46,7 +60,9 @@ namespace ScratchCodeCompiler.Parsing
         {
             if (Match(TokenType.KwFunc))
             {
-                return ParseFunctionDeclaration();
+                FunctionDeclerationNode funcDecl = ParseFunctionDeclaration();
+                functionDeclerations.Add(funcDecl.FunctionName, funcDecl);
+                return funcDecl;
             }
             if (Match(TokenType.KwIf))
             {
@@ -82,6 +98,10 @@ namespace ScratchCodeCompiler.Parsing
                 SCError.HandleError(SCErrors.CS1, Peek());
             }
             string identifier = Previous().Value;
+            if (functionDeclerations.ContainsKey(identifier))
+            {
+                SCError.HandleError(SCErrors.CS8, Previous());
+            }
             if (!Match(TokenType.GmOpenParen))
             {
                 SCError.HandleError(SCErrors.CS2, Peek());
@@ -134,6 +154,12 @@ namespace ScratchCodeCompiler.Parsing
             {
                 Token op = Consume();
                 ExpressionNode right = ParseBinaryExpression(Operators.GetPrecedence(op.Type));
+
+                if (op.Type == TokenType.OpAssign && left is not VariableNode)
+                {
+                    SCError.HandleError(SCErrors.CS7, Previous());
+                }
+
                 left = new BinaryExpressionNode(left, right, op.Type);
             }
             return left;
@@ -147,19 +173,27 @@ namespace ScratchCodeCompiler.Parsing
             }
             if (Match(TokenType.Identifier))
             {
-                string identifier = Previous().Value;
+                Token identifier = Previous();
                 if (Match(TokenType.GmOpenParen))
                 {
                     return ParseFunctionCall(identifier);
                 }
-                return new VariableNode(Previous().Value);
+                if (variables.TryGetValue(identifier.Value, out VariableNode? value))
+                {
+                    return value;
+                }
+                return new VariableNode(Previous().Value, new ScratchVariable(Previous().Value));
             }
             SCError.HandleError(SCErrors.CS6, Peek());
             return default!;
         }
 
-        private FunctionCallNode ParseFunctionCall(string identifier)
+        private FunctionCallNode ParseFunctionCall(Token identifier)
         {
+            if (!functionDeclerations.ContainsKey(identifier.Value))
+            {
+                SCError.HandleError(SCErrors.CS9, identifier);
+            }
             List<ExpressionNode> args = [];
             while (!IsAtEnd() && !Match(TokenType.GmCloseParen))
             {
@@ -174,7 +208,7 @@ namespace ScratchCodeCompiler.Parsing
             {
                 SCError.HandleError(SCErrors.CS3, Previous());
             }
-            return new(identifier, args);
+            return new(identifier.Value, args, functionDeclerations[identifier.Value]);
         }
 
         private void Advance()

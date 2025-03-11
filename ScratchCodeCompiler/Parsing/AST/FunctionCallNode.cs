@@ -11,25 +11,13 @@ namespace ScratchCodeCompiler.Parsing.AST
     {
         public string FunctionName { get; }
         public List<ExpressionNode> FunctionArguments { get; set; }
+        public FunctionDeclerationNode Decleration { get; set; }
 
-        private FunctionDeclerationNode decleration;
-
-        public FunctionCallNode(string functionName, List<ExpressionNode> functionArgs)
+        public FunctionCallNode(string functionName, List<ExpressionNode> functionArgs, FunctionDeclerationNode decleration)
         {
             FunctionName = functionName;
             FunctionArguments = functionArgs;
-
-            FunctionDeclerationNode? decl = FunctionDeclerationNode.GetDecleration(functionName);
-            if (decl == null)
-            {
-                throw new Exception($"Function {functionName} is not defined");
-            }
-            if (decl.FunctionParams.Count != FunctionArguments.Count)
-            {
-                throw new Exception($"Function {functionName} expects {decl.FunctionParams.Count} arguments, but {FunctionArguments.Count} were provided");
-            }
-            decleration = decl;
-
+            Decleration = decleration;
             // TODO: add support for built-in functions
         }
 
@@ -37,11 +25,11 @@ namespace ScratchCodeCompiler.Parsing.AST
         {
             ScratchBlock callBlock = new(ScratchOpcode.Procedures_Call);
             blocks.Add(callBlock);
-            ScratchMutation callMutation = new(decleration.ProcCode);
-            for (int i = 0; i < decleration.FunctionParams.Count; i++)
+            ScratchMutation callMutation = new(Decleration.ProcCode);
+            for (int i = 0; i < Decleration.FunctionParams.Count; i++)
             {
-                callMutation.AddArgument(decleration.FunctionParamIds[i], decleration.FunctionParams[i], "");
-                callBlock.Inputs.Add(new(decleration.FunctionParamIds[i].Id, ScratchInputFormat.String, ""));
+                callMutation.AddArgument(Decleration.FunctionParamIds[i], Decleration.FunctionParams[i], "");
+                callBlock.Inputs.Add(new(Decleration.FunctionParamIds[i].Id, ScratchInputFormat.String, ""));
             }
             callBlock.Mutation = callMutation;
             return callBlock;

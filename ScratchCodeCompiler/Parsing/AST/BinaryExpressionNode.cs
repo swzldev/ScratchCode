@@ -1,4 +1,5 @@
 ﻿using ScratchCodeCompiler.CodeGeneration;
+using ScratchCodeCompiler.ErrorHandling;
 using ScratchCodeCompiler.Lexical;
 using ScratchCodeCompiler.Scratch;
 
@@ -12,10 +13,6 @@ namespace ScratchCodeCompiler.Parsing.AST
 
         public BinaryExpressionNode(ExpressionNode left, ExpressionNode right, TokenType op)
         {
-            if (left is not VariableNode && op == TokenType.OpAssign)
-            {
-                throw new Exception("Left side of assignment must be a variable");
-            }
             Left = left;
             Right = right;
             Operator = op;

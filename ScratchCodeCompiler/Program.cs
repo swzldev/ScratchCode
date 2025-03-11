@@ -24,7 +24,7 @@ namespace ScratchCodeCompiler
             {
                 while (!File.Exists(inputFilePath))
                 {
-                    Console.Write("Input file path: ");
+                    SCOutput.Write("Input file path: ");
                     inputFilePath = Console.ReadLine() ?? "";
                     if (!File.Exists(inputFilePath))
                     {

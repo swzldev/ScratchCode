@@ -32,5 +32,17 @@ namespace ScratchCodeCompiler.ErrorHandling
         /// Expected expression
         /// </summary>
         public static readonly KeyValuePair<int, string> CS6 = new(6, "Expected expression");
+        /// <summary>
+        /// Left side of assignment must be a variable
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS7 = new(7, "Left side of assignment must be a variable");
+        /// <summary>
+        /// Function already declared
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS8 = new(8, "Function already declared");
+        /// <summary>
+        /// Undeclared function
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS9 = new(8, "Undeclared function");
     }
 }

@@ -1,4 +1,5 @@
-﻿using ScratchCodeCompiler.Parsing.AST;
+﻿using ScratchCodeCompiler.Parsing;
+using ScratchCodeCompiler.Parsing.AST;
 using ScratchCodeCompiler.Scratch;
 using System.IO.Compression;
 
@@ -41,7 +42,7 @@ namespace ScratchCodeCompiler.CodeGeneration
             stage.blocks.AddRange(Program.ToScratchBlocks());
 
             // Add variables
-            stage.variables.AddRange(VariableNode.GlobalVariables.Values);
+            stage.variables.AddRange(Parser.GetAllScratchVariables());
 
             File.WriteAllText(projectJsonPath, project.ToJson());
             if (File.Exists(Path.Combine(OutputPath, "project.sb3")))

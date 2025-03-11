@@ -29,7 +29,7 @@ namespace ScratchCodeCompiler.Parsing.AST
                 }
                 else
                 {
-                    throw new NotImplementedException("Found non translatable node");
+                    throw new NotImplementedException("Non translatable node found");
                 }
             }
             return [.. blocks];
