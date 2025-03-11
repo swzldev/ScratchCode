@@ -1,8 +1,8 @@
 event OnFlagClicked {
+	Counter = 0
 	forever {
-		repeat 6 {
-			MoveSteps(43)
-		}
+		Counter = Counter + 1
+		Wait(1)
 	}
 }
 event OnFlagClicked {

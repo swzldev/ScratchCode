@@ -11,5 +11,7 @@ namespace ScratchCodeCompiler.Parsing
     {
         None = 0,
         ForeverStatementInCurrentBlock = 1,
+        WithinEvent = 2,
+        WithinFunction = 4,
     }
 }

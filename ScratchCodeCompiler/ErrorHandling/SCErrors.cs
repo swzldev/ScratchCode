@@ -59,6 +59,22 @@ namespace ScratchCodeCompiler.ErrorHandling
         /// <summary>
         /// Event expected
         /// </summary>
-        public static readonly KeyValuePair<int, string> CS13 = new(12, "Event expected");
+        public static readonly KeyValuePair<int, string> CS13 = new(13, "Event expected");
+        /// <summary>
+        /// Unexpected expression
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS14 = new(14, "Unexpected expression");
+        /// <summary>
+        /// Functions cannot be declared within other functions
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS15 = new(15, "Functions cannot be declared within other functions");
+        /// <summary>
+        /// Events cannot be declared within other events
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS16 = new(16, "Events cannot be declared within other events");
+        /// <summary>
+        /// Statements cannot be used outside a function or event
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS17 = new(17, "Statements cannot be used outside a function or event");
     }
 }

@@ -42,7 +42,19 @@ namespace ScratchCodeCompiler.Parsing
             ProgramNode program = new();
             while (!IsAtEnd())
             {
-                program.Entrys.Add(ParseEventDecleration());
+                Token exprToken = Peek();
+                ASTNode expr = ParseExpression();
+                if (expr is EventDeclerationNode eventDecl)
+                {
+                    program.Entrys.Add(eventDecl);
+                }
+                else if (expr is BinaryExpressionNode binaryExpr)
+                {
+                    if (binaryExpr.Operator != TokenType.OpAssign)
+                    {
+                        SCError.HandleError(SCErrors.CS14, exprToken);
+                    }
+                }
             }
             return program;
         }
@@ -77,10 +89,6 @@ namespace ScratchCodeCompiler.Parsing
 
         private EventDeclerationNode ParseEventDecleration()
         {
-            if (!Match(TokenType.KwEvent))
-            {
-                SCError.HandleError(SCErrors.CS13, Peek());
-            }
             if (!Match(TokenType.Identifier))
             {
                 SCError.HandleError(SCErrors.CS1, Peek());
@@ -125,29 +133,61 @@ namespace ScratchCodeCompiler.Parsing
                     SCError.HandleError(SCErrors.CS3, Previous());
                 }
             }
-            return new(scratchEvent, ParseCodeBlock());
+            parserFlags |= ParserFlags.WithinEvent;
+            CodeBlockNode eventBody = ParseCodeBlock();
+            parserFlags &= ~ParserFlags.WithinEvent;
+            return new(scratchEvent, eventBody);
         }
 
         private ASTNode ParseExpression()
         {
             if (Match(TokenType.KwFunc))
             {
+                // Cannot declare function within function
+                if (parserFlags.HasFlag(ParserFlags.WithinFunction))
+                {
+                    SCError.HandleError(SCErrors.CS15, Previous());
+                }
                 FunctionDeclerationNode funcDecl = ParseFunctionDeclaration();
                 functionDeclerations.Add(funcDecl.FunctionName, funcDecl);
                 return funcDecl;
             }
+            if (Match(TokenType.KwEvent))
+            {
+                // Cannot declare event within event
+                if (parserFlags.HasFlag(ParserFlags.WithinEvent))
+                {
+                    SCError.HandleError(SCErrors.CS16, Previous());
+                }
+                return ParseEventDecleration();
+            }
             if (Match(TokenType.KwIf))
             {
+                // Cannot use if statement outside function or event
+                if (!parserFlags.HasFlag(ParserFlags.WithinFunction) && !parserFlags.HasFlag(ParserFlags.WithinEvent))
+                {
+                    SCError.HandleError(SCErrors.CS17, Previous());
+                }
                 return ParseIfStatement();
             }
             if (Match(TokenType.KwForever))
             {
+                // Cannot use forever statement outside function or event
+                if (!parserFlags.HasFlag(ParserFlags.WithinFunction) && !parserFlags.HasFlag(ParserFlags.WithinEvent))
+                {
+                    SCError.HandleError(SCErrors.CS17, Previous());
+                }
                 ForeverStatementNode foreverNode = new(ParseCodeBlock());
                 parserFlags |= ParserFlags.ForeverStatementInCurrentBlock;
                 return foreverNode;
             }
             if (Match(TokenType.KwRepeat))
             {
+                // Cannot use repeat statement outside function or event
+                if (!parserFlags.HasFlag(ParserFlags.WithinFunction) && !parserFlags.HasFlag(ParserFlags.WithinEvent))
+                {
+                    SCError.HandleError(SCErrors.CS17, Previous());
+                }
                 return new RepeatStatementNode(ParseBinaryExpression(), ParseCodeBlock());
             }
             if (Match(TokenType.KwRepeatUntil))
@@ -198,7 +238,10 @@ namespace ScratchCodeCompiler.Parsing
             {
                 SCError.HandleError(SCErrors.CS3, Previous());
             }
-            return new(identifier, parameters, ParseCodeBlock());
+            parserFlags |= ParserFlags.WithinFunction;
+            CodeBlockNode functionBody = ParseCodeBlock();
+            parserFlags &= ~ParserFlags.WithinFunction;
+            return new(identifier, parameters, functionBody);
         }
 
         private IfStatementNode ParseIfStatement()
