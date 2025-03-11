@@ -28,7 +28,7 @@ namespace ScratchCodeCompiler.ErrorHandling
 
         public static void Error(string message)
         {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message);
         }
     }

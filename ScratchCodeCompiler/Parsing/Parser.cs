@@ -61,7 +61,7 @@ namespace ScratchCodeCompiler.Parsing
                     SCError.HandleWarning(SCWarnings.CSW1, Peek());
                     while (!IsAtEnd() && !Match(TokenType.GmCloseBrace))
                     {
-                        Advance();
+                        ParseExpression();
                     }
                     break;
                 }

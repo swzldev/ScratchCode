@@ -4,5 +4,5 @@ event OnFlagClicked {
 			myVar = myVar + 1
 		}
 	}
-	myVar = 0
+	myVar = 3
 }
