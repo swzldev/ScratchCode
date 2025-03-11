@@ -26,6 +26,11 @@ namespace ScratchCodeCompiler.Parsing
         public Parser(List<Token> tokens)
         {
             this.tokens = tokens;
+            // Add built-in functions
+            foreach (var func in ScratchReservedFunctions.All)
+            {
+                functionDeclerations.Add(func.FunctionName, func);
+            }
         }
 
         public ProgramNode Parse()

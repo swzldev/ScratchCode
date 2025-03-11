@@ -12,10 +12,12 @@ namespace ScratchCodeCompiler.Parsing.AST
         public string FunctionName { get; }
         public List<string> FunctionParams { get; }
         public List<ScratchId> FunctionParamIds { get; } = [];
-        public CodeBlockNode FunctionBody { get; }
-
+        public CodeBlockNode? FunctionBody { get; }
         public string ProcCode { get; }
 
+        public ScratchOpcode? Opcode { get; } = null;
+
+        public bool IsBuiltIn => Opcode != null;
 
         public FunctionDeclerationNode(string name, List<string> parameters, CodeBlockNode body)
         {
@@ -25,13 +27,26 @@ namespace ScratchCodeCompiler.Parsing.AST
             ProcCode = $"{FunctionName} " + string.Join(' ', FunctionParams.Select(x => "%s"));
         }
 
+        public FunctionDeclerationNode(string name, List<string> parameters, ScratchOpcode opcode)
+        {
+            FunctionName = name;
+            FunctionParams = parameters;
+            FunctionBody = null;
+            Opcode = opcode;
+            ProcCode = string.Empty; // Not used for built in functions
+        }
+
         public ScratchBlock ToScratchBlock(ref List<ScratchBlock> blocks)
         {
+            if (IsBuiltIn)
+            {
+                throw new Exception("Attempted to translate built in function to definition");
+            }
             ScratchBlock defineBlock = new(ScratchOpcode.Procedures_Definition, ScratchUtility.GetNextGoodPosition());
             defineBlock.flags = ScratchBlockFlags.NotStitchableAbove;
             blocks.Add(defineBlock);
 
-            if (!FunctionBody.IsEmpty)
+            if (!FunctionBody!.IsEmpty)
             {
                 ScratchBlock[] bodyBlocks = FunctionBody.ToScratchBlocks();
                 defineBlock.Stitch(bodyBlocks.First());

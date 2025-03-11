@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,11 +19,34 @@ namespace ScratchCodeCompiler.Parsing.AST
             FunctionName = functionName;
             FunctionArguments = functionArgs;
             Decleration = decleration;
-            // TODO: add support for built-in functions
         }
 
         public ScratchBlock ToScratchBlock(ref List<ScratchBlock> blocks)
         {
+            if (Decleration.IsBuiltIn)
+            {
+                ScratchBlock funcBlock = new(Decleration.Opcode!.Value);
+                blocks.Add(funcBlock);
+                for (int i = 0; i < Decleration.FunctionParams.Count; i++)
+                {
+                    string paramName = Decleration.FunctionParams[i];
+                    if (FunctionArguments[i] is VariableNode variable)
+                    {
+                        funcBlock.Inputs.Add(new(paramName, ScratchInputFormat.String, variable.ScratchVariable));
+                    }
+                    else if (FunctionArguments[i] is NumberLiteralNode literal)
+                    {
+                        funcBlock.Inputs.Add(new(paramName, ScratchInputFormat.String, literal.Value.ToString()));
+                    }
+                    else
+                    {
+                        ScratchBlock exprResult = (FunctionArguments[i] as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
+                        blocks.Add(exprResult);
+                        funcBlock.Inputs.Add(new(paramName, exprResult));
+                    }
+                }
+                return funcBlock;
+            }
             ScratchBlock callBlock = new(ScratchOpcode.Procedures_Call);
             blocks.Add(callBlock);
             ScratchMutation callMutation = new(Decleration.ProcCode);
