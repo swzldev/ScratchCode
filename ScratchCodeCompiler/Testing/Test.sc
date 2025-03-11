@@ -1,7 +1,10 @@
 event OnFlagClicked {
 	forever {
-		if 3 + 2 {
-			myVar = myVar + 1
+		repeat 6 {
+			MoveSteps(43)
 		}
 	}
+}
+event OnFlagClicked {
+	
 }

@@ -20,7 +20,7 @@ namespace ScratchCodeCompiler.Parsing.AST
 
         public ScratchBlock ToScratchBlock(ref List<ScratchBlock> blocks)
         {
-            ScratchBlock eventBlock = new(ScratchEvent.Opcode);
+            ScratchBlock eventBlock = new(ScratchEvent.Opcode, ScratchUtility.GetNextGoodPosition());
             blocks.Add(eventBlock);
             if (Body.IsEmpty)
             {

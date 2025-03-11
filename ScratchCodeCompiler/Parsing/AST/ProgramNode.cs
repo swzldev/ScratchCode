@@ -4,39 +4,21 @@ namespace ScratchCodeCompiler.Parsing.AST
 {
     internal class ProgramNode : ASTNode
     {
-        public List<ASTNode> Code { get; private set; } = [];
-
-        public void AddExpression(ASTNode expr)
-        {
-            Code.Add(expr);
-        }
+        public List<EventDeclerationNode> Entrys { get; set; } = [];
 
         public ScratchBlock[] ToScratchBlocks()
         {
             List<ScratchBlock> blocks = [];
-            ScratchBlock? lastBlock = null;
-            foreach (ASTNode child in Code)
+            foreach (EventDeclerationNode entry in Entrys)
             {
-                if (child is IScratchBlockTranslatable translatable)
-                {
-                    ScratchBlock scratchBlock = translatable.ToScratchBlock(ref blocks);
-                    if (!scratchBlock.flags.HasFlag(ScratchBlockFlags.NotStitchableAbove))
-                    {
-                        lastBlock?.Stitch(scratchBlock);
-                        lastBlock = scratchBlock;
-                    }
-                }
-                else
-                {
-                    throw new NotImplementedException("Non translatable node found");
-                }
+                entry.ToScratchBlock(ref blocks);
             }
             return [.. blocks];
         }
 
         public override string ToString()
         {
-            return $"Program {{\n{string.Join("\n", Code)}\n}}";
+            return $"Program {{\n{string.Join("\n", Entrys)}\n}}";
         }
     }
 }

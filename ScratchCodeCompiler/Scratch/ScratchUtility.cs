@@ -9,12 +9,13 @@ namespace ScratchCodeCompiler.Scratch
 {
     internal static class ScratchUtility
     {
-        private static ScratchVector2 lastPosition = new(0, 0);
+        private static ScratchVector2 lastPosition = new(-800, 0);
 
         public static ScratchVector2 GetNextGoodPosition()
         {
-            lastPosition.x += 800;
-            return lastPosition;
+            ScratchVector2 newPosition = new(lastPosition.x + 800, lastPosition.y);
+            lastPosition = newPosition;
+            return newPosition;
         }
     }
 }

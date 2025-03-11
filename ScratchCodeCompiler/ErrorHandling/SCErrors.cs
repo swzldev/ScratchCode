@@ -56,5 +56,9 @@ namespace ScratchCodeCompiler.ErrorHandling
         /// Boolean expected
         /// </summary>
         public static readonly KeyValuePair<int, string> CS12 = new(12, "Boolean expected");
+        /// <summary>
+        /// Event expected
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS13 = new(12, "Event expected");
     }
 }

@@ -42,7 +42,7 @@ namespace ScratchCodeCompiler.Parsing
             ProgramNode program = new();
             while (!IsAtEnd())
             {
-                program.AddExpression(ParseExpression());
+                program.Entrys.Add(ParseEventDecleration());
             }
             return program;
         }
@@ -71,52 +71,16 @@ namespace ScratchCodeCompiler.Parsing
             {
                 SCError.HandleError(SCErrors.CS5, Previous());
             }
+            parserFlags &= ~ParserFlags.ForeverStatementInCurrentBlock;
             return codeBlock;
-        }
-
-        private ASTNode ParseExpression()
-        {
-            if (Match(TokenType.KwFunc))
-            {
-                FunctionDeclerationNode funcDecl = ParseFunctionDeclaration();
-                functionDeclerations.Add(funcDecl.FunctionName, funcDecl);
-                return funcDecl;
-            }
-            if (Match(TokenType.KwEvent))
-            {
-                return ParseEventDecleration();
-            }
-            if (Match(TokenType.KwIf))
-            {
-                return ParseIfStatement();
-            }
-            if (Match(TokenType.KwForever))
-            {
-                ForeverStatementNode foreverNode = new(ParseCodeBlock());
-                parserFlags |= ParserFlags.ForeverStatementInCurrentBlock;
-                return foreverNode;
-            }
-            if (Match(TokenType.KwRepeat))
-            {
-                return new RepeatStatementNode(ParseBinaryExpression(), ParseCodeBlock());
-            }
-            if (Match(TokenType.KwRepeatUntil))
-            {
-
-            }
-            if (Match(TokenType.KwWait))
-            {
-
-            }
-            if (Match(TokenType.KwWaitUntil))
-            {
-
-            }
-            return ParseBinaryExpression();
         }
 
         private EventDeclerationNode ParseEventDecleration()
         {
+            if (!Match(TokenType.KwEvent))
+            {
+                SCError.HandleError(SCErrors.CS13, Peek());
+            }
             if (!Match(TokenType.Identifier))
             {
                 SCError.HandleError(SCErrors.CS1, Peek());
@@ -162,6 +126,43 @@ namespace ScratchCodeCompiler.Parsing
                 }
             }
             return new(scratchEvent, ParseCodeBlock());
+        }
+
+        private ASTNode ParseExpression()
+        {
+            if (Match(TokenType.KwFunc))
+            {
+                FunctionDeclerationNode funcDecl = ParseFunctionDeclaration();
+                functionDeclerations.Add(funcDecl.FunctionName, funcDecl);
+                return funcDecl;
+            }
+            if (Match(TokenType.KwIf))
+            {
+                return ParseIfStatement();
+            }
+            if (Match(TokenType.KwForever))
+            {
+                ForeverStatementNode foreverNode = new(ParseCodeBlock());
+                parserFlags |= ParserFlags.ForeverStatementInCurrentBlock;
+                return foreverNode;
+            }
+            if (Match(TokenType.KwRepeat))
+            {
+                return new RepeatStatementNode(ParseBinaryExpression(), ParseCodeBlock());
+            }
+            if (Match(TokenType.KwRepeatUntil))
+            {
+
+            }
+            if (Match(TokenType.KwWait))
+            {
+
+            }
+            if (Match(TokenType.KwWaitUntil))
+            {
+
+            }
+            return ParseBinaryExpression();
         }
 
         private FunctionDeclerationNode ParseFunctionDeclaration()
