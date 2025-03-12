@@ -1,5 +1,5 @@
 # Functions
-Functions are equivelent to "My Blocks" in Scratch.
+Functions are blocks of code that can be reused throughout your program. They can take an optional number of parameters and return a value to the caller. In Scratch, they are equivelent to "My Blocks", the only difference being an optional return value passed through the internal @vfuncreturn variable.
 
 ## Function Declerations
 
