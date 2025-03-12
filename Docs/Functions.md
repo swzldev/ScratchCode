@@ -28,14 +28,16 @@ MyFunc(1, 2)
 # Built-in functions
 There are a number of built-in functions that equate to the various blocks available in Scratch. A comprehensive list can be found below.
 
-## Motion
-**NOTE**: Motion functions are only available on non-scene sprites.
+## **Motion**
+**Note**: Motion functions are only available on non-scene sprites.
 
-### Move Steps
+## MoveSteps(steps)
 Moves a sprite by `steps`
 
-**Syntax**
-`MoveSteps(steps)`
+### Syntax
+```
+MoveSteps(steps)
+```
 
-**Parameters**
+### Parameters
 - **steps**: The number of steps to move.
