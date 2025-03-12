@@ -1,4 +1,4 @@
-<h1 align="left">ScratchCode<br/><img src="https://github.com/user-attachments/assets/52ae6ed9-f2f5-45d2-8b92-a28bef827d60" alt="Logo" align="right" height="150px"></h1>
+<h1 align="left">ScratchCode<br/><img src="https://github.com/user-attachments/assets/52ae6ed9-f2f5-45d2-8b92-a28bef827d60" alt="Logo" style="margin-top: 20px" align="right" height="150px"></h1>
 <img src="https://img.shields.io/badge/Latest_Release-None-red" alt="Latest Release">
 <p>ScratchCode is a programming language that is compiled directly into Scratch code.</p>
 
