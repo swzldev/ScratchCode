@@ -5,12 +5,15 @@ namespace ScratchCodeCompiler.Parsing.AST
     internal class VariableNode : ExpressionNode
     {
         public string VariableName { get; }
+        public ScratchType? VariableType { get; set; }
         public ScratchVariable ScratchVariable { get; set; }
 
-        public VariableNode(string variableName, ScratchVariable scratchVar)
+        public override ScratchType GetReturnType() => VariableType!.Value;
+
+        public VariableNode(string variableName, ScratchVariable scratchVariable)
         {
             VariableName = variableName;
-            ScratchVariable = scratchVar;
+            ScratchVariable = scratchVariable;
         }
 
         public override string ToString()

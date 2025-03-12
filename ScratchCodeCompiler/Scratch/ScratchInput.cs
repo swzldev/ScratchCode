@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScratchCodeCompiler.Parsing.AST;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

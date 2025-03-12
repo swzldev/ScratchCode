@@ -58,9 +58,13 @@ namespace ScratchCodeCompiler.Lexical
         {
             if (!string.IsNullOrEmpty(word))
             {
-                if (float.TryParse(word, out _))
+                if (long.TryParse(word, out _))
                 {
                     tokens.Add(new Token(TokenType.Number, word, l, c - word.Length));
+                }
+                else if (float.TryParse(word, out _))
+                {
+                    tokens.Add(new Token(TokenType.Float, word, l, c - word.Length));
                 }
                 else
                 {
@@ -68,7 +72,15 @@ namespace ScratchCodeCompiler.Lexical
                     {
                         tokens.Add(new Token(type, word, l, c - word.Length));
                     }
-                    else tokens.Add(new Token(TokenType.Identifier, word, l, c - word.Length));
+                    else
+                    {
+                        Token tk = new(TokenType.Identifier, word, l, c - word.Length);
+                        if (tk.Value.Contains('.'))
+                        {
+                            SCError.HandleError(SCErrors.CS18, tk);
+                        }
+                        tokens.Add(tk);
+                    }
                 }
                 word = string.Empty;
                 return true;

@@ -16,16 +16,6 @@ namespace ScratchCodeCompiler.Parsing
         private static readonly Dictionary<string, VariableNode> variables = [];
         private static readonly Dictionary<string, FunctionDeclerationNode> functionDeclerations = [];
 
-        public static ScratchVariable[] GetAllScratchVariables()
-        {
-            ScratchVariable[] scratchVars = new ScratchVariable[variables.Count];
-            for (int i = 0; i < variables.Count; i++)
-            {
-                scratchVars[i] = variables.ElementAt(i).Value.ScratchVariable;
-            }
-            return scratchVars;
-        }
-
         public Parser(List<Token> tokens)
         {
             this.tokens = tokens;
@@ -56,6 +46,10 @@ namespace ScratchCodeCompiler.Parsing
                     program.InitExpressions.Add(binaryExpr);
                 }
             }
+            // Add functions
+            program.FunctionDeclerations.AddRange(functionDeclerations.Values.Where(fn => !fn.IsBuiltIn));
+            // Add variables
+            program.Variables.AddRange(variables.Values);
             return program;
         }
 
@@ -248,13 +242,19 @@ namespace ScratchCodeCompiler.Parsing
         {
             Token expressionToken = Peek();
             ExpressionNode condition = ParseBinaryExpression();
-            if (condition is not BinaryExpressionNode)
+            if (condition is BooleanLiteralNode boolLiteral)
             {
-                SCError.HandleError(SCErrors.CS6, expressionToken);
+                if (boolLiteral.Value == "0")
+                {
+                    SCError.HandleWarning(SCWarnings.CSW2, expressionToken);
+                }
             }
-            if ((condition as BinaryExpressionNode)!.ResultType != ScratchType.Boolean)
+            else
             {
-                SCError.HandleError(SCErrors.CS12, expressionToken);
+                if (condition.GetReturnType() != ScratchType.Boolean)
+                {
+                    SCError.HandleError(SCErrors.CS12, expressionToken);
+                }
             }
             IfStatementNode ifStmt = new(condition, ParseCodeBlock());
             if (Match(TokenType.KwElse))
@@ -275,6 +275,7 @@ namespace ScratchCodeCompiler.Parsing
 
         private ExpressionNode ParseBinaryExpression(int precedence = 0)
         {
+            Token exprFirst = Peek();
             ExpressionNode left = ParsePrimaryExpression();
             while (!IsAtEnd() && Operators.IsOperator(Peek().Type) && Operators.GetPrecedence(Peek().Type) > precedence)
             {
@@ -285,14 +286,49 @@ namespace ScratchCodeCompiler.Parsing
                 {
                     SCError.HandleError(SCErrors.CS7, Previous());
                 }
+                // Handle variable type assignment
+                if (left is VariableNode var)
+                {
+                    if (var.VariableType == null)
+                    {
+                        var.VariableType = right.GetReturnType();
+                        variables.Add(var.VariableName, var);
+                    }
+                }
+                // Handle type mismatches
+                if (left.GetReturnType() != right.GetReturnType())
+                {
+                    SCError.HandleError(SCErrors.CS20, op);
+                }
 
                 left = new BinaryExpressionNode(left, right, op.Type);
+            }
+            if (!Operators.IsOperator(Peek().Type) && left is VariableNode varNode)
+            {
+                // If variable has not been assigned a type, we know it is new
+                if (varNode.VariableType == null)
+                {
+                    // Since its new and isnt being assigned, its undefined
+                    SCError.HandleError(SCErrors.CS19, exprFirst);
+                }
             }
             return left;
         }
 
         private ExpressionNode ParsePrimaryExpression()
         {
+            if (Match(TokenType.KwTrue))
+            {
+                return new BooleanLiteralNode("1");
+            }
+            if (Match(TokenType.KwFalse))
+            {
+                return new BooleanLiteralNode("0");
+            }
+            if (Match(TokenType.Float))
+            {
+                return new FloatLiteralNode(Previous().Value);
+            }
             if (Match(TokenType.Number))
             {
                 return new NumberLiteralNode(Previous().Value);
@@ -308,7 +344,7 @@ namespace ScratchCodeCompiler.Parsing
                 {
                     return value;
                 }
-                return new VariableNode(Previous().Value, new ScratchVariable(Previous().Value));
+                return new VariableNode(Previous().Value, new(Previous().Value));
             }
             SCError.HandleError(SCErrors.CS6, Peek());
             return default!;

@@ -3,9 +3,12 @@
     enum TokenType
     {
         Identifier,
+        Float,
         Number,
 
         // Keywords
+        KwTrue,
+        KwFalse,
         KwFunc,
         KwEvent,
         KwIf,
@@ -24,6 +27,7 @@
         OpSubtract,
         OpMultiply,
         OpDivide,
+        OpAccess,
 
         // Grammars
         GmOpenParen,

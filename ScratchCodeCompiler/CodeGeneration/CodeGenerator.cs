@@ -42,7 +42,7 @@ namespace ScratchCodeCompiler.CodeGeneration
             stage.blocks.AddRange(Program.ToScratchBlocks());
 
             // Add variables
-            stage.variables.AddRange(Parser.GetAllScratchVariables());
+            stage.variables.AddRange(Program.Variables.Select(var => var.ScratchVariable));
 
             File.WriteAllText(projectJsonPath, project.ToJson());
             if (File.Exists(Path.Combine(OutputPath, "project.sb3")))

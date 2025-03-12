@@ -9,12 +9,14 @@ namespace ScratchCodeCompiler.Scratch
     internal class ScratchVariable : IScratchJsonable
     {
         public ScratchId Id { get; }
+        public ScratchInputFormat? Format { get; set; }
         public string Name { get; }
 
         public ScratchVariable(string name)
         {
             Id = new();
             Name = name;
+            Format = null;
         }
 
         public string ToJson()

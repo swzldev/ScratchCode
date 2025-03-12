@@ -21,6 +21,8 @@ namespace ScratchCodeCompiler.Parsing.AST
             Decleration = decleration;
         }
 
+        public override ScratchType GetReturnType() => Decleration.ReturnType;
+
         public ScratchBlock ToScratchBlock(ref List<ScratchBlock> blocks)
         {
             if (Decleration.IsBuiltIn)

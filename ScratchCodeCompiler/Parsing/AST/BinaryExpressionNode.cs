@@ -20,6 +20,8 @@ namespace ScratchCodeCompiler.Parsing.AST
             Operator = op;
         }
 
+        public override ScratchType GetReturnType() => ResultType;
+
         public ScratchBlock ToScratchBlock(ref List<ScratchBlock> blocks)
         {
             if (Operator == TokenType.OpAssign)
@@ -33,10 +35,10 @@ namespace ScratchCodeCompiler.Parsing.AST
                     // Set the variable to the value of another variable
                     setVarBlock.Inputs.Add(new("VALUE", ScratchInputFormat.Number, variable.ScratchVariable));
                 }
-                else if (Right is NumberLiteralNode literal)
+                else if (Right is LiteralNode literal)
                 {
                     // Set the variable to the literal value
-                    setVarBlock.Inputs.Add(new("VALUE", ScratchInputFormat.Number, literal.Value.ToString()));
+                    setVarBlock.Inputs.Add(new("VALUE", ScratchInputFormat.Number, literal.GetValue()));
                 }
                 else
                 {
@@ -70,10 +72,10 @@ namespace ScratchCodeCompiler.Parsing.AST
                     // Compare variable
                     comparisonBlock.Inputs.Add(new("OPERAND1", ScratchInputFormat.Number, lVariable.ScratchVariable));
                 }
-                else if (Left is NumberLiteralNode lLiteral)
+                else if (Left is LiteralNode lLiteral)
                 {
                     // Compare literal
-                    comparisonBlock.Inputs.Add(new("OPERAND1", ScratchInputFormat.Number, lLiteral.Value.ToString()));
+                    comparisonBlock.Inputs.Add(new("OPERAND1", ScratchInputFormat.Number, lLiteral.GetValue()));
                 }
                 else
                 {
@@ -89,10 +91,10 @@ namespace ScratchCodeCompiler.Parsing.AST
                     // Compare variable
                     comparisonBlock.Inputs.Add(new("OPERAND2", ScratchInputFormat.Number, rVariable.ScratchVariable));
                 }
-                else if (Right is NumberLiteralNode rLiteral)
+                else if (Right is LiteralNode rLiteral)
                 {
                     // Compare literal
-                    comparisonBlock.Inputs.Add(new("OPERAND2", ScratchInputFormat.Number, rLiteral.Value.ToString()));
+                    comparisonBlock.Inputs.Add(new("OPERAND2", ScratchInputFormat.Number, rLiteral.GetValue()));
                 }
                 else
                 {

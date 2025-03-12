@@ -1,9 +1,9 @@
+func MyFunc(myParam) {
+}
 event OnFlagClicked {
-	Counter = 0
-	forever {
-		Counter = Counter + 1
-		Wait(0.001)
-	}
+	MyBool = false
+	MyBool = true
+	MyFunc(MyBool)
 }
 event OnFlagClicked {
 	

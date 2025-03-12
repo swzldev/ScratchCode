@@ -14,6 +14,8 @@ namespace ScratchCodeCompiler.Parsing.AST
         public List<ScratchId> FunctionParamIds { get; } = [];
         public CodeBlockNode? FunctionBody { get; }
         public string ProcCode { get; }
+        // TODO: IMPLEMENT THIS
+        public ScratchType ReturnType { get; set; }
 
         public ScratchOpcode? Opcode { get; } = null;
 

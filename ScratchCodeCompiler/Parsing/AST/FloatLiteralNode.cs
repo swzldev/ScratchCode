@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace ScratchCodeCompiler.Parsing.AST
 {
-    internal class NumberLiteralNode : LiteralNode
+    internal class FloatLiteralNode : LiteralNode
     {
         public string Value { get; }
 
-        public NumberLiteralNode(string value)
+        public FloatLiteralNode(string value)
         {
             Value = value;
         }
@@ -25,7 +25,7 @@ namespace ScratchCodeCompiler.Parsing.AST
 
         public override string ToString()
         {
-            return $"NumberLiteral({Value})";
+            return $"FloatLiteral({Value})";
         }
     }
 }

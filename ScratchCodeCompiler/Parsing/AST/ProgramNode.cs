@@ -6,6 +6,8 @@ namespace ScratchCodeCompiler.Parsing.AST
     {
         public List<EventDeclerationNode> Entrys { get; set; } = [];
         public List<ExpressionNode> InitExpressions { get; set; } = [];
+        public List<FunctionDeclerationNode> FunctionDeclerations { get; set; } = [];
+        public List<VariableNode> Variables { get; set; } = [];
 
         private ScratchBlock InitializationEntry { get; set; }
 
@@ -24,6 +26,10 @@ namespace ScratchCodeCompiler.Parsing.AST
                 ScratchBlock entryBlock = (entry as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
                 lastInitEntry.Stitch(entryBlock);
                 lastInitEntry = entryBlock;
+            }
+            foreach (FunctionDeclerationNode funcDecl in FunctionDeclerations)
+            {
+                funcDecl.ToScratchBlock(ref blocks);
             }
             foreach (EventDeclerationNode entry in Entrys)
             {

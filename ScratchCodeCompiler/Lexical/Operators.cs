@@ -14,6 +14,7 @@ namespace ScratchCodeCompiler.Lexical
             { "-", TokenType.OpSubtract },
             { "*", TokenType.OpMultiply },
             { "/", TokenType.OpDivide },
+            { ":", TokenType.OpAccess }
         };
 
         public static string GetOperatorString(TokenType op)
@@ -49,10 +50,11 @@ namespace ScratchCodeCompiler.Lexical
                 TokenType.OpAssign => 1,
                 TokenType.OpEqual => 2,
                 TokenType.OpNotEqual => 3,
-                TokenType.OpAdd => 4,
-                TokenType.OpSubtract => 5,
-                TokenType.OpMultiply => 6,
-                TokenType.OpDivide => 7,
+                TokenType.OpAccess => 4,
+                TokenType.OpAdd => 5,
+                TokenType.OpSubtract => 6,
+                TokenType.OpMultiply => 7,
+                TokenType.OpDivide => 8,
                 _ => throw new ArgumentException("op was not an Operator", nameof(op))
             };
         }

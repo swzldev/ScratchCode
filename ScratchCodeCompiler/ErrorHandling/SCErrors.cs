@@ -76,5 +76,17 @@ namespace ScratchCodeCompiler.ErrorHandling
         /// Statements can only be used within a function or event
         /// </summary>
         public static readonly KeyValuePair<int, string> CS17 = new(17, "Statements can only be used within a function or event");
+        /// <summary>
+        /// Literals cannot contain '.'
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS18 = new(18, "Literals cannot contain '.'");
+        /// <summary>
+        /// Unknown identifier
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS19 = new(19, "Unknown identifier");
+        /// <summary>
+        /// Type mismatch
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS20 = new(20, "Type mismatch");
     }
 }
