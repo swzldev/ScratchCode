@@ -6,7 +6,7 @@
 <p>ScratchCode is a programming language that is compiled directly into Scratch code.</p>
 <p>
   <a href="#features">Features</a> &bull; 
-  <a href="#getting-started">Getting Started</a> &bull; 
+  <a href="#getting-started">Getting Started</a>
 </p>
 
 <h2>Features</h2>
