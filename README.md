@@ -1,4 +1,4 @@
-# ScratchCode
+<h1>ScratchCode</h1>
 ![](https://img.shields.io/badge/any_text-you_like-blue)
 ScratchCode is a programming language that is compiled directly into Scratch code.
 
