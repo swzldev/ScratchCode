@@ -5,6 +5,7 @@ ScratchCode is a programming language that is compiled directly into Scratch cod
 - Simple and easy to write syntax inspired by C.
 - Automatic variable and function creation.
 - Informative error and warning system to debug code easily.
+- Comprehensive documentation on all aspects of the language.
 - ~VS Code extension to allow for syntax highlighting and quick code compilation.~
 
 # Getting started
