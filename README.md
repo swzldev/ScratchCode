@@ -5,8 +5,10 @@
 </p>
 <p>ScratchCode is a programming language that is compiled directly into Scratch code.</p>
 <p>
-  <a href="#features">Features</a> &bull; 
-  <a href="#getting-started">Getting Started</a>
+  <a href="#features">Features</a> &bull;
+  <a href="#getting-started">Getting Started</a> &bull;
+  <a href="#changelog">Changelog</a> &bull;
+  <a href="#credits">Credits</a>
 </p>
 
 <h2>Features</h2>
@@ -21,3 +23,7 @@
 
 <h2>Getting started</h2>
 <p>To begin first download the latest release of the compiler. This is nescessary for converting ScratchCode into a Scratch project you can open in the Scratch editor.</p>
+
+<h2>Changelog</h2>
+
+<h2>Credits</h2>
