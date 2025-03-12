@@ -9,7 +9,7 @@
 <li>Automatic variable and function creation.</li>
 <li>Informative error and warning system to debug code easily.</li>
 <li>Comprehensive documentation on all aspects of the language.</li>
-<li>~VS Code extension to allow for syntax highlighting and quick code compilation.~</li>
+<li><s>VS Code extension to allow for syntax highlighting and quick code compilation.</s></li>
 </ul>
 
 <h1>Getting started</h1>
