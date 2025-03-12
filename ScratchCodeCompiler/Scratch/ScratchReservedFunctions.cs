@@ -15,7 +15,7 @@ namespace ScratchCodeCompiler.Scratch
             new("TurnRight", ["DEGREES"], ScratchOpcode.Motion_TurnRight),
             new("TurnLeft", ["DEGREES"], ScratchOpcode.Motion_TurnLeft),
             new("Goto", ["TO"], ScratchOpcode.Motion_Goto),
-            new("GotoMenu", ["TO"], ScratchOpcode.Motion_GotoMenu),
+            //new("GotoMenu", ["TO"], ScratchOpcode.Motion_GotoMenu),
             new("GotoXy", ["X", "Y"], ScratchOpcode.Motion_GotoXy),
             new("GlideTo", ["SECS", "TO"], ScratchOpcode.Motion_GlideTo),
             new("GlideToMenu", ["TO"], ScratchOpcode.Motion_GlideToMenu),

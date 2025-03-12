@@ -28,11 +28,8 @@ MyFunc(1, 2)
 # Built-in functions
 There are a number of built-in functions that equate to the various blocks available in Scratch. A comprehensive list can be found below.
 
-## **Motion**
-**Note**: Motion functions are only available on non-scene sprites.
-
-## MoveSteps(steps)
-Moves a sprite by `steps`
+## MoveSteps
+Moves a sprite by a number of steps
 
 ### Syntax
 ```
@@ -41,3 +38,51 @@ MoveSteps(steps)
 
 ### Parameters
 - **steps**: The number of steps to move.
+
+### Notes
+Only available on non-scene sprites
+
+
+## TurnRight
+Moves a sprite by a number of steps
+
+### Syntax
+```
+TurnRight(degrees)
+```
+
+### Parameters
+- **degrees**: The number of degrees to turn.
+
+### Notes
+Only available on non-scene sprites
+
+
+## TurnLeft
+Moves a sprite by a number of steps
+
+### Syntax
+```
+TurnLeft(degrees)
+```
+
+### Parameters
+- **degrees**: The number of degrees to turn.
+
+### Notes
+Only available on non-scene sprites
+
+
+## GoTo
+Moves a sprite by a number of steps
+
+### Syntax
+```
+GoTo(to)
+```
+
+### Parameters
+- **to**: The place to go to.
+
+### Notes
+Only available on non-scene sprites
