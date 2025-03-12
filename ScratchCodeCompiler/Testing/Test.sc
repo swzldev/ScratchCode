@@ -1,4 +1,5 @@
 func MyFunc(myParam) {
+	MoveSteps(myParam)
 }
 event OnFlagClicked {
 	MyBool = false

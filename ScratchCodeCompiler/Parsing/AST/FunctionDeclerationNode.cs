@@ -9,10 +9,9 @@ namespace ScratchCodeCompiler.Parsing.AST
 {
     internal class FunctionDeclerationNode : StatementNode, IScratchBlockTranslatable
     {
-        public string FunctionName { get; }
-        public List<string> FunctionParams { get; }
-        public List<ScratchId> FunctionParamIds { get; } = [];
-        public CodeBlockNode? FunctionBody { get; }
+        public string Name { get; }
+        public List<ScratchFunctionParameter> Parameters { get; } = [];
+        public CodeBlockNode? Body { get; }
         public string ProcCode { get; }
         // TODO: IMPLEMENT THIS
         public ScratchType ReturnType { get; set; }
@@ -21,19 +20,19 @@ namespace ScratchCodeCompiler.Parsing.AST
 
         public bool IsBuiltIn => Opcode != null;
 
-        public FunctionDeclerationNode(string name, List<string> parameters, CodeBlockNode body)
+        public FunctionDeclerationNode(string name, List<ScratchFunctionParameter> parameters, CodeBlockNode body)
         {
-            FunctionName = name;
-            FunctionParams = parameters;
-            FunctionBody = body;
-            ProcCode = $"{FunctionName} " + string.Join(' ', FunctionParams.Select(x => "%s"));
+            Name = name;
+            Parameters = parameters;
+            Body = body;
+            ProcCode = $"{Name} " + string.Join(' ', Parameters.Select(x => "%s"));
         }
 
-        public FunctionDeclerationNode(string name, List<string> parameters, ScratchOpcode opcode)
+        public FunctionDeclerationNode(string name, List<ScratchFunctionParameter> parameters, ScratchOpcode opcode)
         {
-            FunctionName = name;
-            FunctionParams = parameters;
-            FunctionBody = null;
+            Name = name;
+            Parameters = parameters;
+            Body = null;
             Opcode = opcode;
             ProcCode = string.Empty; // Not used for built in functions
         }
@@ -50,9 +49,9 @@ namespace ScratchCodeCompiler.Parsing.AST
             };
             blocks.Add(defineBlock);
 
-            if (!FunctionBody!.IsEmpty)
+            if (!Body!.IsEmpty)
             {
-                ScratchBlock[] bodyBlocks = FunctionBody.ToScratchBlocks();
+                ScratchBlock[] bodyBlocks = Body.ToScratchBlocks();
                 defineBlock.Stitch(bodyBlocks.First());
                 blocks.AddRange(bodyBlocks);
             }
@@ -64,16 +63,14 @@ namespace ScratchCodeCompiler.Parsing.AST
             ScratchMutation protoMutation = new(ProcCode); // Use string_number for all inputs temporarily (including booleans)
 
             // Add function arguments
-            for (int i = 0; i < FunctionParams.Count; i++)
+            for (int i = 0; i < Parameters.Count; i++)
             {
-                FunctionParamIds.Add(new());
-
-                ScratchBlock argumentReporter = new(ScratchOpcode.Argument_Reporter_String_Number, protoBlock); // Use string_number for all inputs temporarily (including booleans)
-                argumentReporter.Fields.Add(new("VALUE", FunctionParams[i]));
+                ScratchBlock argumentReporter = Parameters[i].Reporter;
+                argumentReporter.Fields.Add(new("VALUE", Parameters[i].Name));
                 blocks.Add(argumentReporter);
 
-                protoBlock.Inputs.Add(new(FunctionParamIds[i].Id, argumentReporter, ScratchInputType.CustomBlock)); // Use Param ID for input
-                protoMutation.AddArgument(FunctionParamIds[i], FunctionParams[i], ""); // Since we are using string_number, all default will be ""
+                protoBlock.Inputs.Add(new(Parameters[i].Id.Id, argumentReporter, ScratchInputType.CustomBlock)); // Use Param ID for input
+                protoMutation.AddArgument(Parameters[i].Id, Parameters[i].Name, ""); // Since we are using string_number, all default will be ""
             }
 
             protoBlock.Mutation = protoMutation;
@@ -85,7 +82,7 @@ namespace ScratchCodeCompiler.Parsing.AST
 
         public override string ToString()
         {
-            return $"Function {FunctionName}({string.Join(", ", FunctionParams)}) {FunctionBody}";
+            return $"Function {Name}({string.Join(", ", Parameters)}) {Body}";
         }
     }
 }

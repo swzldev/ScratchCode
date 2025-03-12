@@ -29,9 +29,9 @@ namespace ScratchCodeCompiler.Parsing.AST
             {
                 ScratchBlock funcBlock = new(Decleration.Opcode!.Value);
                 blocks.Add(funcBlock);
-                for (int i = 0; i < Decleration.FunctionParams.Count; i++)
+                for (int i = 0; i < Decleration.Parameters.Count; i++)
                 {
-                    string paramName = Decleration.FunctionParams[i];
+                    string paramName = Decleration.Parameters[i].Name;
                     if (FunctionArguments[i] is VariableNode variable)
                     {
                         funcBlock.Inputs.Add(new(paramName, ScratchInputFormat.String, variable.ScratchVariable));
@@ -52,10 +52,10 @@ namespace ScratchCodeCompiler.Parsing.AST
             ScratchBlock callBlock = new(ScratchOpcode.Procedures_Call);
             blocks.Add(callBlock);
             ScratchMutation callMutation = new(Decleration.ProcCode);
-            for (int i = 0; i < Decleration.FunctionParams.Count; i++)
+            for (int i = 0; i < Decleration.Parameters.Count; i++)
             {
-                ScratchId paramId = Decleration.FunctionParamIds[i];
-                callMutation.AddArgument(paramId, Decleration.FunctionParams[i], "");
+                ScratchId paramId = Decleration.Parameters[i].Id;
+                callMutation.AddArgument(paramId, Decleration.Parameters[i].Name, "");
                 if (FunctionArguments[i] is VariableNode variable)
                 {
                     callBlock.Inputs.Add(new(paramId.Id, ScratchInputFormat.String, variable.ScratchVariable));

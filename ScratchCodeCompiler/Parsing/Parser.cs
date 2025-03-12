@@ -22,7 +22,7 @@ namespace ScratchCodeCompiler.Parsing
             // Add built-in functions
             foreach (var func in ScratchReservedFunctions.All)
             {
-                functionDeclerations.Add(func.FunctionName, func);
+                functionDeclerations.Add(func.Name, func);
             }
         }
 
@@ -143,7 +143,7 @@ namespace ScratchCodeCompiler.Parsing
                     SCError.HandleError(SCErrors.CS15, Previous());
                 }
                 FunctionDeclerationNode funcDecl = ParseFunctionDeclaration();
-                functionDeclerations.Add(funcDecl.FunctionName, funcDecl);
+                functionDeclerations.Add(funcDecl.Name, funcDecl);
                 return funcDecl;
             }
             if (Match(TokenType.KwEvent))
@@ -214,14 +214,14 @@ namespace ScratchCodeCompiler.Parsing
             {
                 SCError.HandleError(SCErrors.CS2, Peek());
             }
-            List<string> parameters = [];
+            List<ScratchFunctionParameter> parameters = [];
             while (!IsAtEnd() && !Match(TokenType.GmCloseParen))
             {
                 if (!Match(TokenType.Identifier))
                 {
                     SCError.HandleError(SCErrors.CS1, Peek());
                 }
-                parameters.Add(Previous().Value);
+                parameters.Add(new(Previous().Value));
                 if (!Match(TokenType.GmComma))
                 {
                     Advance();
@@ -233,7 +233,20 @@ namespace ScratchCodeCompiler.Parsing
                 SCError.HandleError(SCErrors.CS3, Previous());
             }
             parserFlags |= ParserFlags.WithinFunction;
+            // Add function parameters
+            foreach (var param in parameters)
+            {
+                VariableNode varNode = new(param.Name, new(param.Name, param.Reporter.Id, ScratchVariableType.Parameter));
+                // Give default type for now
+                varNode.VariableType = ScratchType.Number;
+                variables.Add(param.Name, varNode);
+            }
             CodeBlockNode functionBody = ParseCodeBlock();
+            // Remove function parameters
+            foreach (var param in parameters)
+            {
+                variables.Remove(param.Name);
+            }
             parserFlags &= ~ParserFlags.WithinFunction;
             return new(identifier, parameters, functionBody);
         }
@@ -292,7 +305,10 @@ namespace ScratchCodeCompiler.Parsing
                     if (var.VariableType == null)
                     {
                         var.VariableType = right.GetReturnType();
-                        variables.Add(var.VariableName, var);
+                        if (var.ScratchVariable.Type == ScratchVariableType.Regular)
+                        {
+                            variables.Add(var.VariableName, var);
+                        }
                     }
                 }
                 // Handle type mismatches
@@ -344,7 +360,7 @@ namespace ScratchCodeCompiler.Parsing
                 {
                     return value;
                 }
-                return new VariableNode(Previous().Value, new(Previous().Value));
+                return new VariableNode(Previous().Value, new(Previous().Value, ScratchVariableType.Regular));
             }
             SCError.HandleError(SCErrors.CS6, Peek());
             return default!;
@@ -371,7 +387,7 @@ namespace ScratchCodeCompiler.Parsing
                 SCError.HandleError(SCErrors.CS3, Previous());
             }
             FunctionDeclerationNode decleration = functionDeclerations[identifier.Value];
-            if (args.Count != decleration.FunctionParams.Count)
+            if (args.Count != decleration.Parameters.Count)
             {
                 SCError.HandleError(SCErrors.CS10, identifier);
             }
