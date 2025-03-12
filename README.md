@@ -4,6 +4,10 @@
   <img src="https://img.shields.io/badge/Current_Status-In_development-green" alt="Latest Release">
 </p>
 <p>ScratchCode is a programming language that is compiled directly into Scratch code.</p>
+<p>
+  <a href="#features">Features</a> &bull; 
+  <a href="#getting-started">Getting Started</a> &bull; 
+</p>
 
 <h2>Features</h2>
 <ul>
