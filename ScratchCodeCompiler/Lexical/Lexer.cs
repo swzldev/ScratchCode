@@ -4,8 +4,8 @@ namespace ScratchCodeCompiler.Lexical
 {
     internal class Lexer
     {
-        private string[] codeLines;
-        private List<Token> tokens;
+        private readonly string[] codeLines;
+        private readonly List<Token> tokens;
 
         private int line = 1;
         private int column = 1;
@@ -58,7 +58,7 @@ namespace ScratchCodeCompiler.Lexical
         {
             if (!string.IsNullOrEmpty(word))
             {
-                if (long.TryParse(word, out _))
+                if (float.TryParse(word, out _))
                 {
                     tokens.Add(new Token(TokenType.Number, word, l, c - word.Length));
                 }

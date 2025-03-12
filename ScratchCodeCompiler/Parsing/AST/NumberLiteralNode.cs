@@ -8,9 +8,9 @@ namespace ScratchCodeCompiler.Parsing.AST
 {
     internal class NumberLiteralNode : ExpressionNode
     {
-        public long Value { get; }
+        public string Value { get; }
 
-        public NumberLiteralNode(long value)
+        public NumberLiteralNode(string value)
         {
             Value = value;
         }

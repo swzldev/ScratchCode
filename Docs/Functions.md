@@ -11,6 +11,19 @@ func MyFunc(param1, param2) {
 ```
 
 ### Errors
+- **CS8**: The function already has a decleration. This may be because you are defining multiple functions with the same name, or you are defining a function that has the same name as a built-in function.
+- **CS15**: Functions cannot be declared inside other functions.
 
 
 ## Function calls
+
+### Syntax
+```
+MyFunc(1, 2)
+```
+
+### Errors
+
+
+## Built-in functions
+There are a number of built-in functions that equate to the various blocks available in Scratch.

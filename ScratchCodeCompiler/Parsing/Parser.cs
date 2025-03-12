@@ -10,10 +10,9 @@ namespace ScratchCodeCompiler.Parsing
     {
         private ParserFlags parserFlags = ParserFlags.None;
 
-        private List<Token> tokens;
+        private readonly List<Token> tokens;
         private int currentTokenIndex = 0;
 
-        private static readonly List<EventDeclerationNode> events = [];
         private static readonly Dictionary<string, VariableNode> variables = [];
         private static readonly Dictionary<string, FunctionDeclerationNode> functionDeclerations = [];
 
@@ -54,6 +53,7 @@ namespace ScratchCodeCompiler.Parsing
                     {
                         SCError.HandleError(SCErrors.CS14, exprToken);
                     }
+                    program.InitExpressions.Add(binaryExpr);
                 }
             }
             return program;
@@ -295,7 +295,7 @@ namespace ScratchCodeCompiler.Parsing
         {
             if (Match(TokenType.Number))
             {
-                return new NumberLiteralNode(long.Parse(Previous().Value));
+                return new NumberLiteralNode(Previous().Value);
             }
             if (Match(TokenType.Identifier))
             {

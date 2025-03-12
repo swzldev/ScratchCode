@@ -42,8 +42,10 @@ namespace ScratchCodeCompiler.Parsing.AST
             {
                 throw new Exception("Attempted to translate built in function to definition");
             }
-            ScratchBlock defineBlock = new(ScratchOpcode.Procedures_Definition, ScratchUtility.GetNextGoodPosition());
-            defineBlock.flags = ScratchBlockFlags.NotStitchableAbove;
+            ScratchBlock defineBlock = new(ScratchOpcode.Procedures_Definition, ScratchUtility.GetNextGoodPosition())
+            {
+                flags = ScratchBlockFlags.NotStitchableAbove
+            };
             blocks.Add(defineBlock);
 
             if (!FunctionBody!.IsEmpty)
