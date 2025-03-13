@@ -25,5 +25,10 @@
 <p>To begin first download the latest release of the compiler. This is nescessary for converting ScratchCode into a Scratch project you can open in the Scratch editor.</p>
 
 <h2>Changelog</h2>
+<h3>v1.0.0</h3>
 
 <h2>Credits</h2>
+This project was entirely made by me so idk what to put here yet.
+
+<h2>Liscense</h2>
+<p>This project is liscensed under the MIT liscense. Feel free to use this code in your own projects, attribution is not required but always appreciated.</p>
