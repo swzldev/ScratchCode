@@ -45,15 +45,20 @@ namespace ScratchCodeCompiler.Scratch
             // Expression is a variable
             if (expression is VariableNode variable)
             {
-                // Regular var
-                if (variable.ScratchVariable.Type == ScratchVariableType.Regular)
+                if (variable.ScratchVariable.Type == ScratchVariableType.Parameter)
+                {
+                    // Create reporter (default string for now)
+                    ScratchBlock reporter = new(ScratchOpcode.Argument_Reporter_String_Number)
+                    {
+                        Parent = this
+                    };
+                    reporter.Fields.Add(new("VALUE", variable.VariableName));
+                    blocks.Add(reporter);
+                    Inputs.Add(new(name, reporter));
+                }
+                else
                 {
                     // String format is default for variable assignment
-                    Inputs.Add(new(name, ScratchInputFormat.String, variable.ScratchVariable));
-                }
-                // Parameter var
-                else if (variable.ScratchVariable.Type == ScratchVariableType.Parameter)
-                {
                     Inputs.Add(new(name, ScratchInputFormat.String, variable.ScratchVariable));
                 }
             }

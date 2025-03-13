@@ -66,6 +66,7 @@ namespace ScratchCodeCompiler.Parsing.AST
             for (int i = 0; i < Parameters.Count; i++)
             {
                 ScratchBlock argumentReporter = Parameters[i].Reporter;
+                argumentReporter.Parent = protoBlock;
                 argumentReporter.Fields.Add(new("VALUE", Parameters[i].Name));
                 blocks.Add(argumentReporter);
 

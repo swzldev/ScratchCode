@@ -1,5 +1,6 @@
 func MyFunc(myParam) {
-	MoveSteps(myParam)
+	myParam = myParam * 2
+	MyInt = myParam
 }
 event OnFlagClicked {
 	MyInt = 5
