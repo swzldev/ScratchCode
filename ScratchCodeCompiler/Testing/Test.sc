@@ -1,10 +1,7 @@
-func MyFunc(myParam) {
-	myParam = myParam * 2
-	MyInt = myParam
-}
 event OnFlagClicked {
-	MyInt = 5
-	if MyInt > 2 or 3 < MyInt + 4 {
-		MyInt = 10
+	MyInt = 0
+	repeatuntil MyInt == 10 and 50 > MyInt {
+		MyInt = MyInt + 1
+		Wait(0.5)
 	}
 }

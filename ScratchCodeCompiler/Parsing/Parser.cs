@@ -186,7 +186,12 @@ namespace ScratchCodeCompiler.Parsing
             }
             if (Match(TokenType.KwRepeatUntil))
             {
-
+                // Cannot use repeat until statement outside function or event
+                if (!parserFlags.HasFlag(ParserFlags.WithinFunction) && !parserFlags.HasFlag(ParserFlags.WithinEvent))
+                {
+                    SCError.HandleError(SCErrors.CS17, Previous());
+                }
+                return new RepeatUntilStatementNode(ParseBinaryExpression(), ParseCodeBlock());
             }
             if (Match(TokenType.KwWait))
             {

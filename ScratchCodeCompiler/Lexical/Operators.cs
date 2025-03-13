@@ -7,11 +7,11 @@ namespace ScratchCodeCompiler.Lexical
     {
         private static readonly Dictionary<string, TokenType> operatorTypeMap = new()
         {
-            { "=", TokenType.OpAssign },
-            { "or", TokenType.OpOr },
             { "and", TokenType.OpAnd },
+            { "or", TokenType.OpOr },
             { "==" , TokenType.OpEqual },
             { "!=", TokenType.OpNotEqual },
+            { "=", TokenType.OpAssign },
             { ">", TokenType.OpGreaterThan },
             { "<", TokenType.OpLessThan },
             { "+", TokenType.OpAdd },
@@ -53,14 +53,21 @@ namespace ScratchCodeCompiler.Lexical
 
         public static int GetPrecedence(TokenType op)
         {
-            for (int i = 0; i < operatorTypeMap.Keys.Count; i++)
+            return op switch
             {
-                if (operatorTypeMap.ElementAt(i).Value == op)
-                {
-                    return i + 1;
-                }
-            }
-            throw new ArgumentException("op was not an Operator", nameof(op));
+                TokenType.OpAssign => 1,
+                TokenType.OpOr => 2,
+                TokenType.OpAnd => 3,
+                TokenType.OpEqual => 4,
+                TokenType.OpNotEqual => 5,
+                TokenType.OpGreaterThan => 6,
+                TokenType.OpLessThan => 7,
+                TokenType.OpAdd => 8,
+                TokenType.OpSubtract => 9,
+                TokenType.OpMultiply => 10,
+                TokenType.OpDivide => 11,
+                _ => throw new ArgumentException("op was not an Operator", nameof(op))
+            };
         }
 
         public static int GetOperatorLength(TokenType op)
