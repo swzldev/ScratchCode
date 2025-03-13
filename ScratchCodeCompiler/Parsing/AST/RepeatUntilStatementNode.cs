@@ -20,23 +20,23 @@ namespace ScratchCodeCompiler.Parsing.AST
 
         public ScratchBlock ToScratchBlock(ref List<ScratchBlock> blocks)
         {
-            ScratchBlock repeatBlock = new(ScratchOpcode.Control_Repeat_Until);
-            blocks.Add(repeatBlock);
+            ScratchBlock repeatUntilBlock = new(ScratchOpcode.Control_Repeat_Until);
+            blocks.Add(repeatUntilBlock);
 
             // Add the condition
-            repeatBlock.AddInputExpression("CONDITION", Condition, ref blocks);
+            repeatUntilBlock.AddInputExpression("CONDITION", Condition, ref blocks);
 
             // Add the body
             if (Body.IsEmpty)
             {
-                repeatBlock.Inputs.Add(new("SUBSTACK"));
-                return repeatBlock;
+                repeatUntilBlock.Inputs.Add(new("SUBSTACK"));
+                return repeatUntilBlock;
             }
             ScratchBlock[] bodyBlocks = Body.ToScratchBlocks();
-            repeatBlock.Inputs.Add(new("SUBSTACK", bodyBlocks.First()));
-            bodyBlocks.First().Parent = repeatBlock;
+            repeatUntilBlock.Inputs.Add(new("SUBSTACK", bodyBlocks.First()));
+            bodyBlocks.First().Parent = repeatUntilBlock;
             blocks.AddRange(bodyBlocks);
-            return repeatBlock;
+            return repeatUntilBlock;
         }
     }
 }

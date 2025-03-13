@@ -26,7 +26,6 @@ namespace ScratchCodeCompiler.Lexical
                 "forever" => TokenType.KwForever,
                 "repeat" => TokenType.KwRepeat,
                 "repeatuntil" => TokenType.KwRepeatUntil,
-                "wait" => TokenType.KwWait,
                 "waituntil" => TokenType.KwWaitUntil,
                 _ => TokenType.Identifier
             };
