@@ -66,6 +66,7 @@ namespace ScratchCodeCompiler.Scratch
             else
             {
                 ScratchBlock exprResult = (expression as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
+                exprResult.Parent = this;
                 blocks.Add(exprResult);
                 Inputs.Add(new(name, exprResult));
             }

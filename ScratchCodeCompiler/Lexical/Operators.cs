@@ -8,6 +8,8 @@ namespace ScratchCodeCompiler.Lexical
         private static readonly Dictionary<string, TokenType> operatorTypeMap = new()
         {
             { "=", TokenType.OpAssign },
+            { "or", TokenType.OpOr },
+            { "and", TokenType.OpAnd },
             { "==" , TokenType.OpEqual },
             { "!=", TokenType.OpNotEqual },
             { ">", TokenType.OpGreaterThan },
@@ -43,6 +45,8 @@ namespace ScratchCodeCompiler.Lexical
                 TokenType.OpNotEqual => ScratchType.Boolean,
                 TokenType.OpGreaterThan => ScratchType.Boolean,
                 TokenType.OpLessThan => ScratchType.Boolean,
+                TokenType.OpOr => ScratchType.Boolean,
+                TokenType.OpAnd => ScratchType.Boolean,
                 _ => throw new ArgumentException("op was not an Operator", nameof(op))
             };
         }
@@ -53,7 +57,7 @@ namespace ScratchCodeCompiler.Lexical
             {
                 if (operatorTypeMap.ElementAt(i).Value == op)
                 {
-                    return i;
+                    return i + 1;
                 }
             }
             throw new ArgumentException("op was not an Operator", nameof(op));

@@ -21,6 +21,8 @@
 
         // Operators
         OpAssign,
+        OpOr,
+        OpAnd,
         OpEqual,
         OpNotEqual,
         OpGreaterThan,

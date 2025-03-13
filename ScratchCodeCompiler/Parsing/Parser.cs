@@ -288,11 +288,12 @@ namespace ScratchCodeCompiler.Parsing
 
         private ExpressionNode ParseBinaryExpression(int precedence = 0)
         {
-            Token exprFirst = Peek();
+            Token lExprFirst = Peek();
             ExpressionNode left = ParsePrimaryExpression();
             while (!IsAtEnd() && Operators.IsOperator(Peek().Type) && Operators.GetPrecedence(Peek().Type) > precedence)
             {
                 Token op = Consume();
+                Token rExprFirst = Peek();
                 ExpressionNode right = ParseBinaryExpression(Operators.GetPrecedence(op.Type));
 
                 if (op.Type == TokenType.OpAssign && left is not VariableNode)
@@ -308,10 +309,22 @@ namespace ScratchCodeCompiler.Parsing
                         variables.Add(var.VariableName, var);
                     }
                 }
+                // Handle and and or operators
+                if (op.Type == TokenType.OpAnd || op.Type == TokenType.OpOr)
+                {
+                    if (left.GetReturnType() != ScratchType.Boolean)
+                    {
+                        SCError.HandleError(SCErrors.CS12, lExprFirst);
+                    }
+                    if (right.GetReturnType() != ScratchType.Boolean)
+                    {
+                        SCError.HandleError(SCErrors.CS12, rExprFirst);
+                    }
+                }
                 // Handle type mismatches
                 if (left.GetReturnType() != right.GetReturnType())
                 {
-                    SCError.HandleError(SCErrors.CS20, op);
+                    SCError.HandleError(SCErrors.CS20, lExprFirst);
                 }
 
                 left = new BinaryExpressionNode(left, right, op.Type);
@@ -322,7 +335,7 @@ namespace ScratchCodeCompiler.Parsing
                 if (varNode.VariableType == null)
                 {
                     // Since its new and isnt being assigned, its undefined
-                    SCError.HandleError(SCErrors.CS19, exprFirst);
+                    SCError.HandleError(SCErrors.CS19, lExprFirst);
                 }
             }
             return left;

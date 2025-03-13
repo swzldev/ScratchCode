@@ -26,7 +26,7 @@ namespace ScratchCodeCompiler.Parsing.AST
         {
             if (Operator == TokenType.OpAssign)
             {
-                ScratchBlock setVarBlock = new(ScratchOpcode.Data_SetVariableTo, new ScratchVector2(0, 0));
+                ScratchBlock setVarBlock = new(ScratchOpcode.Data_SetVariableTo);
                 blocks.Add(setVarBlock);
                 ScratchVariable assignmentVar = (Left as VariableNode)!.ScratchVariable;
                 setVarBlock.Fields.Add(new("VARIABLE", assignmentVar));
@@ -36,14 +36,14 @@ namespace ScratchCodeCompiler.Parsing.AST
             else if (Operator == TokenType.OpEqual || Operator == TokenType.OpNotEqual)
             {
                 ScratchBlock ret;
-                ScratchBlock comparisonBlock = new(ScratchOpcode.Operator_Equals, new ScratchVector2(0, 0));
+                ScratchBlock comparisonBlock = new(ScratchOpcode.Operator_Equals);
                 if (Operator == TokenType.OpEqual)
                 {
                     ret = comparisonBlock;
                 }
                 else
                 {
-                    ret = new(ScratchOpcode.Operator_Not, new ScratchVector2(0, 0));
+                    ret = new(ScratchOpcode.Operator_Not);
                     // Add the comparison block to the input of the NOT block
                     ret.Inputs.Add(new("OPERAND", comparisonBlock));
                     comparisonBlock.Parent = ret;
@@ -58,12 +58,30 @@ namespace ScratchCodeCompiler.Parsing.AST
             else if (Operator == TokenType.OpGreaterThan || Operator == TokenType.OpLessThan)
             {
                 ScratchOpcode opcode = Operator == TokenType.OpGreaterThan ? ScratchOpcode.Operator_GT : ScratchOpcode.Operator_LT;
-                ScratchBlock comparisonBlock = new(opcode, new ScratchVector2(0, 0));
+                ScratchBlock comparisonBlock = new(opcode);
 
                 comparisonBlock.AddInputExpression("OPERAND1", Left, ref blocks);
                 comparisonBlock.AddInputExpression("OPERAND2", Right, ref blocks);
 
                 return comparisonBlock;
+            }
+            else if (Operator == TokenType.OpOr)
+            {
+                ScratchBlock orBlock = new(ScratchOpcode.Operator_Or);
+
+                orBlock.AddInputExpression("OPERAND1", Left, ref blocks);
+                orBlock.AddInputExpression("OPERAND2", Right, ref blocks);
+
+                return orBlock;
+            }
+            else if (Operator == TokenType.OpAnd)
+            {
+                ScratchBlock andBlock = new(ScratchOpcode.Operator_And);
+
+                andBlock.AddInputExpression("OPERAND1", Left, ref blocks);
+                andBlock.AddInputExpression("OPERAND2", Right, ref blocks);
+
+                return andBlock;
             }
             else
             {
@@ -75,7 +93,7 @@ namespace ScratchCodeCompiler.Parsing.AST
                     TokenType.OpDivide => ScratchOpcode.Operator_Divide,
                     _ => throw new Exception($"Invalid operator {Operator}")
                 };
-                ScratchBlock operationBlock = new(opcode, new ScratchVector2(0, 0));
+                ScratchBlock operationBlock = new(opcode);
 
                 operationBlock.AddInputExpression("NUM1", Left, ref blocks);
                 operationBlock.AddInputExpression("NUM2", Right, ref blocks);
