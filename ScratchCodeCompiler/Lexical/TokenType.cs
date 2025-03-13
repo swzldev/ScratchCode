@@ -23,6 +23,8 @@
         OpAssign,
         OpEqual,
         OpNotEqual,
+        OpGreaterThan,
+        OpLessThan,
         OpAdd,
         OpSubtract,
         OpMultiply,

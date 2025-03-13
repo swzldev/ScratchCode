@@ -7,14 +7,16 @@ namespace ScratchCodeCompiler.Lexical
     {
         private static readonly Dictionary<string, TokenType> operatorTypeMap = new()
         {
+            { "=", TokenType.OpAssign },
             { "==" , TokenType.OpEqual },
             { "!=", TokenType.OpNotEqual },
-            { "=", TokenType.OpAssign },
+            { ">", TokenType.OpGreaterThan },
+            { "<", TokenType.OpLessThan },
             { "+", TokenType.OpAdd },
             { "-", TokenType.OpSubtract },
             { "*", TokenType.OpMultiply },
             { "/", TokenType.OpDivide },
-            { ":", TokenType.OpAccess }
+            //{ ":", TokenType.OpAccess }
         };
 
         public static string GetOperatorString(TokenType op)
@@ -39,24 +41,22 @@ namespace ScratchCodeCompiler.Lexical
                 TokenType.OpDivide => ScratchType.Number,
                 TokenType.OpEqual => ScratchType.Boolean,
                 TokenType.OpNotEqual => ScratchType.Boolean,
+                TokenType.OpGreaterThan => ScratchType.Boolean,
+                TokenType.OpLessThan => ScratchType.Boolean,
                 _ => throw new ArgumentException("op was not an Operator", nameof(op))
             };
         }
 
         public static int GetPrecedence(TokenType op)
         {
-            return op switch
+            for (int i = 0; i < operatorTypeMap.Keys.Count; i++)
             {
-                TokenType.OpAssign => 1,
-                TokenType.OpEqual => 2,
-                TokenType.OpNotEqual => 3,
-                TokenType.OpAccess => 4,
-                TokenType.OpAdd => 5,
-                TokenType.OpSubtract => 6,
-                TokenType.OpMultiply => 7,
-                TokenType.OpDivide => 8,
-                _ => throw new ArgumentException("op was not an Operator", nameof(op))
-            };
+                if (operatorTypeMap.ElementAt(i).Value == op)
+                {
+                    return i;
+                }
+            }
+            throw new ArgumentException("op was not an Operator", nameof(op));
         }
 
         public static int GetOperatorLength(TokenType op)

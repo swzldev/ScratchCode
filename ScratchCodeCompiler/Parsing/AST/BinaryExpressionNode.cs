@@ -55,6 +55,16 @@ namespace ScratchCodeCompiler.Parsing.AST
 
                 return ret;
             }
+            else if (Operator == TokenType.OpGreaterThan || Operator == TokenType.OpLessThan)
+            {
+                ScratchOpcode opcode = Operator == TokenType.OpGreaterThan ? ScratchOpcode.Operator_GT : ScratchOpcode.Operator_LT;
+                ScratchBlock comparisonBlock = new(opcode, new ScratchVector2(0, 0));
+
+                comparisonBlock.AddInputExpression("OPERAND1", Left, ref blocks);
+                comparisonBlock.AddInputExpression("OPERAND2", Right, ref blocks);
+
+                return comparisonBlock;
+            }
             else
             {
                 ScratchOpcode opcode = Operator switch
