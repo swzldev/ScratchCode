@@ -1,4 +1,4 @@
-<h1 align="left">ScratchCode<br/><img src="https://github.com/user-attachments/assets/b4d15643-5739-4c85-955b-0cec6e55ba1b" alt="Logo" align="right" height="200px"></h1>
+<h1 align="left">ScratchCode<br/><img src="Assets/logo.png" alt="Logo" align="right" height="200px"></h1>
 <p align="left">
   <img src="https://img.shields.io/github/downloads-pre/swzldev/ScratchCode/latest/total" alt="Downloads">
   <img src="https://img.shields.io/github/stars/swzldev/ScratchCode" alt="Stars">
