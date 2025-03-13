@@ -21,6 +21,9 @@ namespace ScratchCodeCompiler.Parsing.AST
                 ScratchBlock ifElseBlock = new(ScratchOpcode.Control_If_Else, new ScratchVector2(0, 0));
                 blocks.Add(ifElseBlock);
 
+                // Add condition expression
+                ifElseBlock.AddInputExpression("CONDITION", Condition, ref blocks);
+
                 // Fix these functions at some point
                 ScratchBlock[] ifBodyBlocks = Body.ToScratchBlocks();
                 ifElseBlock.Inputs.Add(new("SUBSTACK", ifBodyBlocks.First()));
@@ -32,20 +35,13 @@ namespace ScratchCodeCompiler.Parsing.AST
                 elseBlocks.First().Parent = ifElseBlock;
                 blocks.AddRange(elseBlocks);
 
-                ScratchBlock ieCndBlock = (Condition as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
-                ieCndBlock.Parent = ifElseBlock;
-                ifElseBlock.Inputs.Add(new("CONDITION", ieCndBlock));
-                blocks.Add(ieCndBlock);
-
                 return ifElseBlock;
             }
             ScratchBlock ifBlock = new(ScratchOpcode.Control_If, new ScratchVector2(0, 0));
             blocks.Add(ifBlock);
 
-            ScratchBlock cndBlock = (Condition as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
-            cndBlock.Parent = ifBlock;
-            ifBlock.Inputs.Add(new("CONDITION", cndBlock));
-            blocks.Add(cndBlock);
+            // Add condition expression
+            ifBlock.AddInputExpression("CONDITION", Condition, ref blocks);
 
             ScratchBlock[] bodyBlocks = Body.ToScratchBlocks();
             ifBlock.Inputs.Add(new("SUBSTACK", bodyBlocks.First()));

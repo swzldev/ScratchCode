@@ -30,24 +30,7 @@ namespace ScratchCodeCompiler.Parsing.AST
                 blocks.Add(setVarBlock);
                 ScratchVariable assignmentVar = (Left as VariableNode)!.ScratchVariable;
                 setVarBlock.Fields.Add(new("VARIABLE", assignmentVar));
-                if (Right is VariableNode variable)
-                {
-                    // Set the variable to the value of another variable
-                    setVarBlock.Inputs.Add(new("VALUE", ScratchInputFormat.Number, variable.ScratchVariable));
-                }
-                else if (Right is LiteralNode literal)
-                {
-                    // Set the variable to the literal value
-                    setVarBlock.Inputs.Add(new("VALUE", ScratchInputFormat.Number, literal.GetValue()));
-                }
-                else
-                {
-                    // Set the variable to the result of an expression
-                    ScratchBlock exprResult = (Right as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
-                    setVarBlock.Inputs.Add(new("VALUE", exprResult ?? throw new NullReferenceException(), ScratchInputFormat.Number));
-                    exprResult.Parent = setVarBlock;
-                    blocks.Add(exprResult);
-                }
+                setVarBlock.AddInputExpression("VALUE", Right, ref blocks);
                 return setVarBlock;
             }
             else if (Operator == TokenType.OpEqual || Operator == TokenType.OpNotEqual)
@@ -67,43 +50,9 @@ namespace ScratchCodeCompiler.Parsing.AST
                     blocks.Add(comparisonBlock);
                 }
 
-                if (Left is VariableNode lVariable)
-                {
-                    // Compare variable
-                    comparisonBlock.Inputs.Add(new("OPERAND1", ScratchInputFormat.Number, lVariable.ScratchVariable));
-                }
-                else if (Left is LiteralNode lLiteral)
-                {
-                    // Compare literal
-                    comparisonBlock.Inputs.Add(new("OPERAND1", ScratchInputFormat.Number, lLiteral.GetValue()));
-                }
-                else
-                {
-                    // Compare expression
-                    ScratchBlock lExprResult = (Left as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
-                    lExprResult!.Parent = comparisonBlock;
-                    comparisonBlock.Inputs.Add(new("OPERAND1", lExprResult ?? throw new NullReferenceException(), ScratchInputFormat.Number));
-                    blocks.Add(lExprResult);
-                }
+                comparisonBlock.AddInputExpression("OPERAND1", Left, ref blocks);
+                comparisonBlock.AddInputExpression("OPERAND2", Right, ref blocks);
 
-                if (Right is VariableNode rVariable)
-                {
-                    // Compare variable
-                    comparisonBlock.Inputs.Add(new("OPERAND2", ScratchInputFormat.Number, rVariable.ScratchVariable));
-                }
-                else if (Right is LiteralNode rLiteral)
-                {
-                    // Compare literal
-                    comparisonBlock.Inputs.Add(new("OPERAND2", ScratchInputFormat.Number, rLiteral.GetValue()));
-                }
-                else
-                {
-                    // Compare expression
-                    ScratchBlock rExprResult = (Right as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
-                    rExprResult!.Parent = comparisonBlock;
-                    comparisonBlock.Inputs.Add(new("OPERAND2", rExprResult ?? throw new NullReferenceException(), ScratchInputFormat.Number));
-                    blocks.Add(rExprResult);
-                }
                 return ret;
             }
             else
@@ -118,43 +67,9 @@ namespace ScratchCodeCompiler.Parsing.AST
                 };
                 ScratchBlock operationBlock = new(opcode, new ScratchVector2(0, 0));
 
-                if (Left is VariableNode lVariable)
-                {
-                    // Compare variable
-                    operationBlock.Inputs.Add(new("NUM1", ScratchInputFormat.Number, lVariable.ScratchVariable));
-                }
-                else if (Left is NumberLiteralNode lLiteral)
-                {
-                    // Compare literal
-                    operationBlock.Inputs.Add(new("NUM1", ScratchInputFormat.Number, lLiteral.Value.ToString()));
-                }
-                else
-                {
-                    // Compare expression
-                    ScratchBlock lExprResult = (Left as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
-                    lExprResult!.Parent = operationBlock;
-                    operationBlock.Inputs.Add(new("NUM1", lExprResult ?? throw new NullReferenceException(), ScratchInputFormat.Number));
-                    blocks.Add(lExprResult);
-                }
+                operationBlock.AddInputExpression("NUM1", Left, ref blocks);
+                operationBlock.AddInputExpression("NUM2", Right, ref blocks);
 
-                if (Right is VariableNode rVariable)
-                {
-                    // Compare variable
-                    operationBlock.Inputs.Add(new("NUM2", ScratchInputFormat.Number, rVariable.ScratchVariable));
-                }
-                else if (Right is NumberLiteralNode rLiteral)
-                {
-                    // Compare literal
-                    operationBlock.Inputs.Add(new("NUM2", ScratchInputFormat.Number, rLiteral.Value.ToString()));
-                }
-                else
-                {
-                    // Compare expression
-                    ScratchBlock rExprResult = (Right as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
-                    rExprResult!.Parent = operationBlock;
-                    operationBlock.Inputs.Add(new("NUM2", rExprResult ?? throw new NullReferenceException(), ScratchInputFormat.Number));
-                    blocks.Add(rExprResult);
-                }
                 return operationBlock;
             }
         }

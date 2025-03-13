@@ -32,20 +32,7 @@ namespace ScratchCodeCompiler.Parsing.AST
                 for (int i = 0; i < Decleration.Parameters.Count; i++)
                 {
                     string paramName = Decleration.Parameters[i].Name;
-                    if (FunctionArguments[i] is VariableNode variable)
-                    {
-                        funcBlock.Inputs.Add(new(paramName, ScratchInputFormat.String, variable.ScratchVariable));
-                    }
-                    else if (FunctionArguments[i] is NumberLiteralNode literal)
-                    {
-                        funcBlock.Inputs.Add(new(paramName, ScratchInputFormat.String, literal.Value.ToString()));
-                    }
-                    else
-                    {
-                        ScratchBlock exprResult = (FunctionArguments[i] as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
-                        blocks.Add(exprResult);
-                        funcBlock.Inputs.Add(new(paramName, exprResult));
-                    }
+                    funcBlock.AddInputExpression(paramName, FunctionArguments[i], ref blocks);
                 }
                 return funcBlock;
             }
@@ -56,20 +43,7 @@ namespace ScratchCodeCompiler.Parsing.AST
             {
                 ScratchId paramId = Decleration.Parameters[i].Id;
                 callMutation.AddArgument(paramId, Decleration.Parameters[i].Name, "");
-                if (FunctionArguments[i] is VariableNode variable)
-                {
-                    callBlock.Inputs.Add(new(paramId.Id, ScratchInputFormat.String, variable.ScratchVariable));
-                }
-                else if (FunctionArguments[i] is NumberLiteralNode literal)
-                {
-                    callBlock.Inputs.Add(new(paramId.Id, ScratchInputFormat.String, literal.Value.ToString()));
-                }
-                else
-                {
-                    ScratchBlock exprResult = (FunctionArguments[i] as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
-                    blocks.Add(exprResult);
-                    callBlock.Inputs.Add(new(paramId.Id, exprResult));
-                }
+                callBlock.AddInputExpression(paramId.Id, FunctionArguments[i], ref blocks);
             }
             callBlock.Mutation = callMutation;
             return callBlock;

@@ -305,10 +305,7 @@ namespace ScratchCodeCompiler.Parsing
                     if (var.VariableType == null)
                     {
                         var.VariableType = right.GetReturnType();
-                        if (var.ScratchVariable.Type == ScratchVariableType.Regular)
-                        {
-                            variables.Add(var.VariableName, var);
-                        }
+                        variables.Add(var.VariableName, var);
                     }
                 }
                 // Handle type mismatches

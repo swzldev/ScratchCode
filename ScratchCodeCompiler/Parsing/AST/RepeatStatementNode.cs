@@ -24,20 +24,7 @@ namespace ScratchCodeCompiler.Parsing.AST
             blocks.Add(repeatBlock);
 
             // Add the repeat count
-            if (RepeatCount is VariableNode variable)
-            {
-                repeatBlock.Inputs.Add(new("TIMES", ScratchInputFormat.String, variable.ScratchVariable));
-            }
-            else if (RepeatCount is NumberLiteralNode literal)
-            {
-                repeatBlock.Inputs.Add(new("TIMES", ScratchInputFormat.String, literal.Value.ToString()));
-            }
-            else
-            {
-                ScratchBlock exprResult = (RepeatCount as IScratchBlockTranslatable)!.ToScratchBlock(ref blocks);
-                blocks.Add(exprResult);
-                repeatBlock.Inputs.Add(new("TIMES", exprResult));
-            }
+            repeatBlock.AddInputExpression("TIMES", RepeatCount, ref blocks);
 
             // Add the body
             if (Body.IsEmpty)
