@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/github/downloads-pre/swzldev/ScratchCode/latest/total" alt="Downloads">
   <img src="https://img.shields.io/github/stars/swzldev/ScratchCode" alt="Stars">
 </p>
-<p>ScratchCode is a programming language that is compiled directly into Scratch code.</p>
+<p>ScratchCode is a programming language that is compiled directly into Scratch blocks.</p>
 <p>
   <a href="#features">Features</a> &bull;
   <a href="#getting-started">Getting Started</a> &bull;
