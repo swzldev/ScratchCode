@@ -26,6 +26,7 @@
 
 <h2>Changelog</h2>
 <h3>v1.0.0</h3>
+<b><s>Initial Release</s></b>
 
 <h2>Credits</h2>
 This project was entirely made by me so idk what to put here yet.
