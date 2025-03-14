@@ -175,6 +175,10 @@ namespace ScratchCodeCompiler.Parsing
 
         private ASTNode ParseExpression()
         {
+            if (Match(TokenType.KwSprite))
+            {
+                return ParseSpriteDecleration();
+            }
             if (Match(TokenType.KwFunc))
             {
                 FunctionDeclerationNode funcDecl = ParseFunctionDeclaration();
@@ -206,6 +210,24 @@ namespace ScratchCodeCompiler.Parsing
                 return new WaitUntilStatementNode(ParseBinaryExpression());
             }
             return ParseBinaryExpression();
+        }
+
+        private SpriteDeclerationNode ParseSpriteDecleration()
+        {
+            if (!Match(TokenType.Identifier))
+            {
+                SCError.HandleError(SCErrors.CS1, Peek());
+            }
+            string identifier = Previous().Value;
+            if (!Match(TokenType.GmOpenBracket))
+            {
+                SCError.HandleError(SCErrors.CS21, Peek());
+            }
+            
+            if (!Match(TokenType.GmCloseBracket))
+            {
+                SCError.HandleError(SCErrors.CS22, Peek());
+            }
         }
 
         private FunctionDeclerationNode ParseFunctionDeclaration()

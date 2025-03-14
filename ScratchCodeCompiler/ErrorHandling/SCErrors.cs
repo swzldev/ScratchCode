@@ -88,5 +88,13 @@ namespace ScratchCodeCompiler.ErrorHandling
         /// Type mismatch
         /// </summary>
         public static readonly KeyValuePair<int, string> CS20 = new(20, "Type mismatch");
+        /// <summary>
+        /// '[' expected
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS21 = new(21, "'[' expected");
+        /// <summary>
+        /// ']' expected
+        /// </summary>
+        public static readonly KeyValuePair<int, string> CS22 = new(22, "']' expected");
     }
 }

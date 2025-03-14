@@ -9,6 +9,7 @@
         // Keywords
         KwTrue,
         KwFalse,
+        KwSprite,
         KwFunc,
         KwEvent,
         KwIf,

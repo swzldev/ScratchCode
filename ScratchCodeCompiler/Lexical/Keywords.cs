@@ -19,6 +19,7 @@ namespace ScratchCodeCompiler.Lexical
             {
                 "true" => TokenType.KwTrue,
                 "false" => TokenType.KwFalse,
+                "sprite" => TokenType.KwSprite,
                 "func" => TokenType.KwFunc,
                 "event" => TokenType.KwEvent,
                 "if" => TokenType.KwIf,
