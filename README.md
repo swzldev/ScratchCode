@@ -1,4 +1,4 @@
-<h1 align="left">ScratchCode<br/><img src="Assets/logo.png" alt="Logo" align="right" height="200px"></h1>
+<h1 align="left">ScratchCode<br/><img src="Assets/logoshadow.png" alt="Logo" align="right" height="200px"></h1>
 <p align="left">
   <img src="https://img.shields.io/github/downloads-pre/swzldev/ScratchCode/latest/total" alt="Downloads">
   <img src="https://img.shields.io/github/stars/swzldev/ScratchCode" alt="Stars">
@@ -26,6 +26,7 @@
 
 <h2>Changelog</h2>
 <h3>v1.0.0</h3>
+<b><s>Initial Release</s></b>
 
 <h2>Credits</h2>
 This project was entirely made by me so idk what to put here yet.
