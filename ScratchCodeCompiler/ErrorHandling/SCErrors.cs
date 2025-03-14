@@ -65,17 +65,17 @@ namespace ScratchCodeCompiler.ErrorHandling
         /// </summary>
         public static readonly KeyValuePair<int, string> CS14 = new(14, "Unexpected expression");
         /// <summary>
-        /// Functions cannot be declared within other functions
+        /// Function cannot be declared here
         /// </summary>
-        public static readonly KeyValuePair<int, string> CS15 = new(15, "Functions cannot be declared within other functions");
+        public static readonly KeyValuePair<int, string> CS15 = new(15, "Function cannot be declared here");
         /// <summary>
-        /// Events cannot be declared within other events
+        /// Event cannot be declared here
         /// </summary>
-        public static readonly KeyValuePair<int, string> CS16 = new(16, "Events cannot be declared within other events");
+        public static readonly KeyValuePair<int, string> CS16 = new(16, "Event cannot be declared here");
         /// <summary>
-        /// Statements can only be used within a function or event
+        /// Statement cannot be used here
         /// </summary>
-        public static readonly KeyValuePair<int, string> CS17 = new(17, "Statements can only be used within a function or event");
+        public static readonly KeyValuePair<int, string> CS17 = new(17, "Statement cannot be used here");
         /// <summary>
         /// Literals cannot contain '.'
         /// </summary>

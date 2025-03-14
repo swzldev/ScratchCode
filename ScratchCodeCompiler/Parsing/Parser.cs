@@ -8,8 +8,6 @@ namespace ScratchCodeCompiler.Parsing
 {
     internal class Parser
     {
-        private ParserFlags parserFlags = ParserFlags.None;
-
         private readonly List<Token> tokens;
         private int currentTokenIndex = 0;
 
@@ -53,7 +51,7 @@ namespace ScratchCodeCompiler.Parsing
             return program;
         }
 
-        private CodeBlockNode ParseCodeBlock()
+        private CodeBlockNode ParseCodeBlock(CodeBlockContext ctx)
         {
             if (!Match(TokenType.GmOpenBrace))
             {
@@ -62,22 +60,66 @@ namespace ScratchCodeCompiler.Parsing
             CodeBlockNode codeBlock = new();
             while (!IsAtEnd() && !Match(TokenType.GmCloseBrace))
             {
-                if (parserFlags.HasFlag(ParserFlags.ForeverStatementInCurrentBlock))
+                if (codeBlock.Children.Where(x => x is ForeverStatementNode).Any())
                 {
                     SCError.HandleWarning(SCWarnings.CSW1, Peek());
-                    while (!IsAtEnd() && !Match(TokenType.GmCloseBrace))
-                    {
-                        ParseExpression();
-                    }
-                    break;
                 }
+                // Inside event
+                if (ctx == CodeBlockContext.Event)
+                {
+                    // Event in event
+                    if (Check(TokenType.KwEvent))
+                    {
+                        SCError.HandleError(SCErrors.CS16, Peek());
+                    }
+                    // Function in event
+                    else if (Check(TokenType.KwFunc))
+                    {
+                        SCError.HandleError(SCErrors.CS15, Peek());
+                    }
+                }
+                // Inside function
+                else if (ctx == CodeBlockContext.Function && Check(TokenType.KwFunc))
+                {
+                    // Function in function
+                    SCError.HandleError(SCErrors.CS15, Peek());
+                }
+                // Outside function and event
+                else
+                {
+                    // Function outside function or event
+                    if (Check(TokenType.KwFunc))
+                    {
+                        SCError.HandleError(SCErrors.CS15, Peek());
+                    }
+                    // Forever statement outside function or event
+                    if (Check(TokenType.KwForever))
+                    {
+                        SCError.HandleError(SCErrors.CS17, Peek());
+                    }
+                    // Repeat statement outside function or event
+                    if (Check(TokenType.KwRepeat))
+                    {
+                        SCError.HandleError(SCErrors.CS17, Peek());
+                    }
+                    // Repeat until statement outside function or event
+                    if (Check(TokenType.KwRepeatUntil))
+                    {
+                        SCError.HandleError(SCErrors.CS17, Peek());
+                    }
+                    // Wait until statement outside function or event
+                    if (Check(TokenType.KwWaitUntil))
+                    {
+                        SCError.HandleError(SCErrors.CS17, Peek());
+                    }
+                }
+
                 codeBlock.Children.Add(ParseExpression());
             }
             if (Previous().Type != TokenType.GmCloseBrace)
             {
                 SCError.HandleError(SCErrors.CS5, Previous());
             }
-            parserFlags &= ~ParserFlags.ForeverStatementInCurrentBlock;
             return codeBlock;
         }
 
@@ -127,9 +169,7 @@ namespace ScratchCodeCompiler.Parsing
                     SCError.HandleError(SCErrors.CS3, Previous());
                 }
             }
-            parserFlags |= ParserFlags.WithinEvent;
-            CodeBlockNode eventBody = ParseCodeBlock();
-            parserFlags &= ~ParserFlags.WithinEvent;
+            CodeBlockNode eventBody = ParseCodeBlock(CodeBlockContext.Event);
             return new(scratchEvent, eventBody);
         }
 
@@ -137,69 +177,32 @@ namespace ScratchCodeCompiler.Parsing
         {
             if (Match(TokenType.KwFunc))
             {
-                // Cannot declare function within function
-                if (parserFlags.HasFlag(ParserFlags.WithinFunction))
-                {
-                    SCError.HandleError(SCErrors.CS15, Previous());
-                }
                 FunctionDeclerationNode funcDecl = ParseFunctionDeclaration();
                 functionDeclerations.Add(funcDecl.Name, funcDecl);
                 return funcDecl;
             }
             if (Match(TokenType.KwEvent))
             {
-                // Cannot declare event within event
-                if (parserFlags.HasFlag(ParserFlags.WithinEvent))
-                {
-                    SCError.HandleError(SCErrors.CS16, Previous());
-                }
                 return ParseEventDecleration();
             }
             if (Match(TokenType.KwIf))
             {
-                // Cannot use if statement outside function or event
-                if (!parserFlags.HasFlag(ParserFlags.WithinFunction) && !parserFlags.HasFlag(ParserFlags.WithinEvent))
-                {
-                    SCError.HandleError(SCErrors.CS17, Previous());
-                }
                 return ParseIfStatement();
             }
             if (Match(TokenType.KwForever))
             {
-                // Cannot use forever statement outside function or event
-                if (!parserFlags.HasFlag(ParserFlags.WithinFunction) && !parserFlags.HasFlag(ParserFlags.WithinEvent))
-                {
-                    SCError.HandleError(SCErrors.CS17, Previous());
-                }
-                ForeverStatementNode foreverNode = new(ParseCodeBlock());
-                parserFlags |= ParserFlags.ForeverStatementInCurrentBlock;
-                return foreverNode;
+                return new ForeverStatementNode(ParseCodeBlock(CodeBlockContext.ForeverStatement));
             }
             if (Match(TokenType.KwRepeat))
             {
-                // Cannot use repeat statement outside function or event
-                if (!parserFlags.HasFlag(ParserFlags.WithinFunction) && !parserFlags.HasFlag(ParserFlags.WithinEvent))
-                {
-                    SCError.HandleError(SCErrors.CS17, Previous());
-                }
-                return new RepeatStatementNode(ParseBinaryExpression(), ParseCodeBlock());
+                return new RepeatStatementNode(ParseBinaryExpression(), ParseCodeBlock(CodeBlockContext.RepeatStatement));
             }
             if (Match(TokenType.KwRepeatUntil))
             {
-                // Cannot use repeat until statement outside function or event
-                if (!parserFlags.HasFlag(ParserFlags.WithinFunction) && !parserFlags.HasFlag(ParserFlags.WithinEvent))
-                {
-                    SCError.HandleError(SCErrors.CS17, Previous());
-                }
-                return new RepeatUntilStatementNode(ParseBinaryExpression(), ParseCodeBlock());
+                return new RepeatUntilStatementNode(ParseBinaryExpression(), ParseCodeBlock(CodeBlockContext.RepeatUntilStatement));
             }
             if (Match(TokenType.KwWaitUntil))
             {
-                // Cannot use wait until statement outside function or event
-                if (!parserFlags.HasFlag(ParserFlags.WithinFunction) && !parserFlags.HasFlag(ParserFlags.WithinEvent))
-                {
-                    SCError.HandleError(SCErrors.CS17, Previous());
-                }
                 return new WaitUntilStatementNode(ParseBinaryExpression());
             }
             return ParseBinaryExpression();
@@ -238,22 +241,22 @@ namespace ScratchCodeCompiler.Parsing
             {
                 SCError.HandleError(SCErrors.CS3, Previous());
             }
-            parserFlags |= ParserFlags.WithinFunction;
             // Add function parameters
             foreach (var param in parameters)
             {
-                VariableNode varNode = new(param.Name, new(param.Name, param.Reporter.Id, ScratchVariableType.Parameter));
-                // Give default type for now
-                varNode.VariableType = ScratchType.Number;
+                VariableNode varNode = new(param.Name, new(param.Name, param.Reporter.Id, ScratchVariableType.Parameter))
+                {
+                    // Give default type for now
+                    VariableType = ScratchType.Number
+                };
                 variables.Add(param.Name, varNode);
             }
-            CodeBlockNode functionBody = ParseCodeBlock();
+            CodeBlockNode functionBody = ParseCodeBlock(CodeBlockContext.Function);
             // Remove function parameters
             foreach (var param in parameters)
             {
                 variables.Remove(param.Name);
             }
-            parserFlags &= ~ParserFlags.WithinFunction;
             return new(identifier, parameters, functionBody);
         }
 
@@ -275,7 +278,7 @@ namespace ScratchCodeCompiler.Parsing
                     SCError.HandleError(SCErrors.CS12, expressionToken);
                 }
             }
-            IfStatementNode ifStmt = new(condition, ParseCodeBlock());
+            IfStatementNode ifStmt = new(condition, ParseCodeBlock(CodeBlockContext.IfStatement));
             if (Match(TokenType.KwElse))
             {
                 ifStmt.ElseNode = ParseElseStatement(ifStmt);
@@ -289,7 +292,7 @@ namespace ScratchCodeCompiler.Parsing
             {
                 return new(parent, ParseIfStatement());
             }
-            return new(parent, ParseCodeBlock());
+            return new(parent, ParseCodeBlock(CodeBlockContext.ElseStatement));
         }
 
         private ExpressionNode ParseBinaryExpression(int precedence = 0)
